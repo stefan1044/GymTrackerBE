@@ -12,4 +12,6 @@ router.post("/", userController.createUser);
 router.put("/changeuser/:id", userController.updateUsername);
 router.put("/changepass/:id", userController.updatePassword);
 
+router.delete("/:id", userController.deleteUser);
+
 module.exports = router;

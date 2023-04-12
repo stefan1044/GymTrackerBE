@@ -51,6 +51,7 @@ const UserModel = {
         return db.query(query).then((rows) => {
             return rows.rows.length === 1;
         }).catch(e => {
+            console.log(e.message)
             throw new Error("Error in isUsernameTaken!");
         })
     }, doesIdExist: async function (id) {
@@ -61,7 +62,7 @@ const UserModel = {
         return db.query(query).then((rows) => {
             return rows.rows[0]['exists'];
         }).catch(e => {
-            console.log("here")
+            console.log(e.message);
             throw new Error("Error in doesIdExist!");
         })
 
