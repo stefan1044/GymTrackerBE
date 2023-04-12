@@ -49,7 +49,7 @@ const UserModel = {
         }
 
         return db.query(query).then((rows) => {
-            return rows.rows.length === 1;
+            return rows.rows[0]['exists'];
         }).catch(e => {
             console.log(e.message)
             throw new Error("Error in isUsernameTaken!");

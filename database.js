@@ -1,5 +1,5 @@
-require("dotenv").config();
-const {Client} = require("pg");
+require('dotenv').config();
+const {Client} = require('pg');
 const connectDb = () => {
     try {
         const client = new Client({
@@ -11,18 +11,18 @@ const connectDb = () => {
         })
 
         client.connect();
-        client.on('notice', (msg) => console.warn('notice:', msg));
-        client.on('error', (err) => {
-            console.error('Db client encountered errors!', err.stack);
+        client.on("notice", (msg) => console.warn("notice:", msg));
+        client.on("error", (err) => {
+            console.error("Db client encountered errors!", err.stack);
         });
-        client.on('end', () => {
-            console.log('Db client closed!');
+        client.on("end", () => {
+            console.log("Db client closed!");
         });
 
-        client.query('SELECT NOW()').then(
+        client.query("SELECT NOW()").then(
             (result) => console.log(`Pinged successfully! ${result.rows[0]['now']}`)).catch(
             (err) => {
-                console.error('Ping error!', err.stack)
+                console.error("Ping error!", err.stack)
                 client.end();
             });
         return client;
