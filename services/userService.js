@@ -1,5 +1,6 @@
 const UserModel = require('../models/userModel');
-
+const {config} = require("dotenv");
+// TODO: Catch errors from User.Model!
 const getAllUsers = async (config = {}) => {
     return UserModel.getAll(config);
 }
@@ -11,11 +12,21 @@ const getUserById = async (id, config = {}) => {
     }
     return rows;
 }
+const loginUser = async (username, password, config = {}) => {
+    const ok = await UserModel.login(username, password, config).catch(e => {
+        throw new Error("Error in userService.loginUser!");
+    });
+
+
+    // should return some kind of token here
+    return ok;
+}
 
 const createUser = async (username, password, config = {}) => {
     if (await UserModel.isUsernameTaken(username)) {
         throw new Error("Username taken!");
     }
+
     return UserModel.create(username, password, config)
 }
 
@@ -46,5 +57,5 @@ const removeUser = async (id, config = {}) => {
 }
 
 module.exports = {
-    getAllUsers, getUserById, createUser, modifyUsername, modifyPassword, removeUser
+    getAllUsers, getUserById, loginUser, createUser, modifyUsername, modifyPassword, removeUser
 }

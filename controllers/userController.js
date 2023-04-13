@@ -82,6 +82,21 @@ const deleteUser = async (req, res) => {
     })
 }
 
+const loginUser = async (req, res) => {
+    await userService.loginUser(req.body['user_name'], req.body['password']).then((ok) => {
+        if (!ok){
+            res.status(httpStatus.NOT_FOUND).send("Invalid username or password!");
+        }
+        else{
+            res.status(httpStatus.OK).send("Logged in!");
+        }
+    }).catch(e=>{
+        res.status(httpStatus.NOT_FOUND).send("Error in userService.loginUser!");
+
+        console.log(e, e.stack);
+    })
+}
+
 module.exports = {
-    createUser, readUsers, readUserById, updateUsername, updatePassword, deleteUser
+    createUser, readUsers, readUserById, updateUsername, updatePassword, deleteUser, loginUser
 }

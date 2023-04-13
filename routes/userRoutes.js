@@ -4,14 +4,15 @@ const router = new Router();
 
 const userController = require('../controllers/userController');
 
+// TODO: Add password hashing, add validators, authentication verification (jwt)
+router.get("/", userController.readUsers); // not sure if needed
+router.get("/:id", userController.readUserById); // not sure if needed
+router.get("/login", userValidator.validateUsername, userValidator.validatePassword, userController.loginUser);
 
-router.get("/", userController.readUsers);
-router.get("/:id", userController.readUserById);
+router.post("/", userValidator.validateUsername, userValidator.validatePassword, userController.createUser);
 
-router.post("/", userValidator.validateUser, userController.createUser);
-
-router.put("/changeuser/:id", userController.updateUsername);
-router.put("/changepass/:id", userController.updatePassword);
+router.put("/changeuser/:id", userValidator.validateUsername, userController.updateUsername);
+router.put("/changepass/:id", userValidator.validatePassword, userController.updatePassword);
 
 router.delete("/:id", userController.deleteUser);
 
