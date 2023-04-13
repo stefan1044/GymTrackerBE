@@ -13,6 +13,7 @@ router.post("/", userValidator.validateUsername, userValidator.validatePassword,
 
 router.put("/changeuser/:id", userValidator.validateUsername, userController.updateUsername);
 router.put("/changepass/:id", userValidator.validatePassword, userController.updatePassword);
+router.put("/changeemail/:id", userValidator.validateEmail, userController.updateEmail);
 
 router.delete("/:id", userController.deleteUser);
 

@@ -2,7 +2,7 @@ const httpStatus = require('http-status');
 const userService = require('../services/userService');
 
 const createUser = async (req, res) => {
-    await userService.createUser(req.body['user_name'], req.body['password']).then((rows) => {
+    await userService.createUser(req.body['user_name'], req.body['password'], req.body['email']).then((rows) => {
         res.status(httpStatus.CREATED).send();
     }).catch(e => {
         if (e.message === "Username taken!") {
@@ -50,7 +50,7 @@ const updateUsername = async (req, res) => {
             return;
         }
 
-        res.status(httpStatus.NOT_FOUND).send("Error when modifying user!");
+        res.status(httpStatus.NOT_FOUND).send("Error when modifying user username!");
         console.log(e, e.stack);
     })
 }
@@ -63,7 +63,20 @@ const updatePassword = async (req, res) => {
             return;
         }
 
-        res.status(httpStatus.NOT_FOUND).send("Error when modifying user!");
+        res.status(httpStatus.NOT_FOUND).send("Error when modifying user password!");
+        console.log(e, e.stack);
+    })
+}
+const updateEmail = async (req, res) => {
+    await userService.modifyEmail(req.params.id, req.body['email']).then((rows) => {
+        res.status(httpStatus.OK).send();
+    }).catch(e=>{
+        if ( e.message === "User with id does not exist!"){
+            res.status(httpStatus.NOT_FOUND).send("User with provided user_id does not exist!");
+            return;
+        }
+
+        res.status(httpStatus.NOT_FOUND).send("Error when modifying user email!");
         console.log(e, e.stack);
     })
 }
@@ -98,5 +111,5 @@ const loginUser = async (req, res) => {
 }
 
 module.exports = {
-    createUser, readUsers, readUserById, updateUsername, updatePassword, deleteUser, loginUser
+    createUser, readUsers, readUserById, updateUsername, updatePassword, deleteUser, loginUser, updateEmail
 }

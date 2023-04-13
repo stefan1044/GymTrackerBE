@@ -28,10 +28,10 @@ const UserModel = {
             console.log(e.message)
             throw new Error("Error in login!");
         });
-    }, create: async function (userName, password, config = {}) {
+    }, create: async function (userName, password, email, config = {}) {
         let query = {
-            text: "INSERT INTO users(user_name, password, created_at) VALUES($1, $2, NOW())",
-            values: [userName, password]
+            text: "INSERT INTO users(user_name, password, email, created_at) VALUES($1, $2, $3, NOW())",
+            values: [userName, password, email]
         }
         query = {...query, ...config};
 
@@ -46,6 +46,13 @@ const UserModel = {
     }, modifyPassword: async function (id, password, config = {}) {
         let query = {
             text: "UPDATE users SET password = $1 WHERE user_id = $2", values: [password, id]
+        }
+        query = {...query, ...config};
+
+        return db.query(query);
+    }, modifyEmail: async function (id, email, config = {}){
+        let query = {
+            text: "UPDATE users SET email = $1 WHERE user_id = $2", values: [email, id]
         }
         query = {...query, ...config};
 

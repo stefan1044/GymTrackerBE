@@ -8,6 +8,7 @@ const validateUsername = (req, res, next) => {
     }
     if (userName.length < 6) {
         res.status(httpStatus.BAD_REQUEST).send("User name is too short!");
+        return;
     }
     if (userName.length > 24) {
         res.status(httpStatus.BAD_REQUEST).send("User name is too long!");
@@ -29,9 +30,11 @@ const validatePassword = (req, res, next) => {
     }
     if (password.length < 6) {
         res.status(httpStatus.BAD_REQUEST).send("Password is too short!");
+        return;
     }
     if (password.length > 32) {
         res.status(httpStatus.BAD_REQUEST).send("Password is too long!");
+        return;
     }
     if (password.includes("'") || password.includes('"') || password.includes("\\") || password.includes("*") || password.includes("=")) {
         res.status(httpStatus.BAD_REQUEST).send("User name contains invalid characters!");
@@ -41,6 +44,11 @@ const validatePassword = (req, res, next) => {
     next()
 }
 
+const validateEmail = (req, res, next) => {
+
+    next();
+}
+
 module.exports = {
-    validatePassword, validateUsername
+    validatePassword, validateUsername, validateEmail
 }
