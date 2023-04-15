@@ -1,6 +1,6 @@
 const httpStatus = require('http-status');
 
-const validateWorkout = (req, res, next) => {
+const validateWorkout = async (req, res, next) => {
     // format the dates into integers
     const completedAt = req.body['completed_at'].split("-").map(value => {
         if (value[0] === "0") {
@@ -29,15 +29,23 @@ const validateWorkout = (req, res, next) => {
         }
     }
 
-
+    // verify duration
     const duration = req.body['duration'];
     if(duration < 1 || duration > 1440){
-        res.status(httpStatus.BAD_REQUEST).send("Incorrect date!");
+        res.status(httpStatus.BAD_REQUEST).send("Incorrect duration!");
         return;
     }
 
+    // verify exercises
     const exercises = req.body['exercises'];
-    console.log(exercises);
+    console.log(typeof exercises);
+    try {
+        const result = JSON.stringify(exercises);
+        } catch (e) {
+        res.status(httpStatus.BAD_REQUEST).send("Error parsing exercise json");
+        console.error(e, e.stack);
+        return;
+    }
 
 
     next();
