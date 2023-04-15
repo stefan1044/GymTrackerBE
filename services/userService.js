@@ -1,5 +1,6 @@
 const UserModel = require('../models/userModel');
-const {config} = require("dotenv");
+const {compare} = require("../utils/passwordHasher");
+
 // TODO: Catch errors from User.Model!
 const getAllUsers = async (config = {}) => {
     return UserModel.getAll(config);
@@ -13,13 +14,15 @@ const getUserById = async (id, config = {}) => {
     return rows;
 }
 const loginUser = async (username, password, config = {}) => {
-    const ok = await UserModel.login(username, password, config).catch(e => {
+    if (await UserModel.isUsernameTaken(username) === false){
+        throw new Error("User with provided username does not exist!");
+    }
+
+    const dbPassword = await UserModel.getPassword(username, config).catch(e => {
         throw new Error("Error in userService.loginUser!");
     });
 
-
-    // should return some kind of token here
-    return ok;
+    return compare(password, dbPassword.rows[0]['password']);
 }
 
 const createUser = async (username, password, email, config = {}) => {

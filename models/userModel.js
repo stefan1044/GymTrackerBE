@@ -1,4 +1,5 @@
 const db = require("../database");
+const {encrypt} = require("../utils/passwordHasher");
 
 const UserModel = {
     getAll: async function (config = {}) {
@@ -15,20 +16,16 @@ const UserModel = {
         query = {...query, ...config};
 
         return db.query(query);
-    }, login: async function (username, password, config = {}){
+    }, getPassword: async function (username, config = {}){
         let query = {
-            text: "SELECT exists (SELECT 1 FROM  users WHERE user_name = $1 AND password = $2 LIMIT 1)",
-            values: [username, password]
+            text: "SELECT password FROM users WHERE user_name = $1",
+            values: [username]
         }
         query = {...query, ...config};
 
-        return db.query(query).then((rows) => {
-            return rows.rows[0]['exists'];
-        }).catch(e => {
-            console.log(e.message)
-            throw new Error("Error in login!");
-        });
+        return db.query(query);
     }, create: async function (userName, password, email, config = {}) {
+        password = await encrypt(password);
         let query = {
             text: "INSERT INTO users(user_name, password, email, created_at) VALUES($1, $2, $3, NOW())",
             values: [userName, password, email]

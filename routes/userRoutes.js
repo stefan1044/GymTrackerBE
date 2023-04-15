@@ -5,8 +5,8 @@ const router = new Router();
 const userController = require('../controllers/userController');
 
 // TODO: Add password hashing, add validators, authentication verification (jwt)
-router.get("/", userController.readUsers); // not sure if needed
-router.get("/:id", userController.readUserById); // not sure if needed
+router.get("/all", userController.readUsers); // not sure if needed
+router.get("/id/:id", userController.readUserById); // not sure if needed
 router.get("/login", userValidator.validateUsername, userValidator.validatePassword, userController.loginUser);
 
 router.post("/", userValidator.validateUsername, userValidator.validatePassword, userController.createUser);

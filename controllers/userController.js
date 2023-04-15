@@ -104,8 +104,12 @@ const loginUser = async (req, res) => {
             res.status(httpStatus.OK).send("Logged in!");
         }
     }).catch(e=>{
-        res.status(httpStatus.NOT_FOUND).send("Error in userService.loginUser!");
+        if (e.message === "User with provided username does not exist!"){
+            res.status(httpStatus.NOT_FOUND).send("Invalid username or password");
+            return;
+        }
 
+        res.status(httpStatus.NOT_FOUND).send("Error when logging in!");
         console.log(e, e.stack);
     })
 }

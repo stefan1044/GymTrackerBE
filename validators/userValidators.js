@@ -44,7 +44,8 @@ const validatePassword = (req, res, next) => {
     next()
 }
 
-const validateEmail = (req, res, next) => {
+
+const validateEmail = async (req, res, next) => {
 
     next();
 }
