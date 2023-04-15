@@ -19,15 +19,13 @@ const connectDb = () => {
             console.log("Db client closed!");
         });
 
-        client.query("SELECT NOW()").then(
-            (result) => console.log(`Pinged successfully! ${result.rows[0]['now']}`)).catch(
-            (err) => {
-                console.error("Ping error!", err.stack)
-                client.end();
-            });
+        client.query("SELECT NOW()").then((result) => console.log(`Pinged successfully! ${result.rows[0]['now']}`)).catch((err) => {
+            console.error("Ping error!", err.stack)
+            client.end();
+        });
         return client;
     } catch (error) {
-        console.error("Db connection error!" ,error.stack);
+        console.error("Db connection error!", error.stack);
     }
 }
 

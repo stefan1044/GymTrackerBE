@@ -16,10 +16,9 @@ const UserModel = {
         query = {...query, ...config};
 
         return db.query(query);
-    }, getPassword: async function (username, config = {}){
+    }, getPassword: async function (username, config = {}) {
         let query = {
-            text: "SELECT password FROM users WHERE user_name = $1",
-            values: [username]
+            text: "SELECT password FROM users WHERE user_name = $1", values: [username]
         }
         query = {...query, ...config};
 
@@ -47,7 +46,7 @@ const UserModel = {
         query = {...query, ...config};
 
         return db.query(query);
-    }, modifyEmail: async function (id, email, config = {}){
+    }, modifyEmail: async function (id, email, config = {}) {
         let query = {
             text: "UPDATE users SET email = $1 WHERE user_id = $2", values: [email, id]
         }

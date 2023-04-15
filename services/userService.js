@@ -14,7 +14,7 @@ const getUserById = async (id, config = {}) => {
     return rows;
 }
 const loginUser = async (username, password, config = {}) => {
-    if (await UserModel.isUsernameTaken(username) === false){
+    if (await UserModel.isUsernameTaken(username) === false) {
         throw new Error("User with provided username does not exist!");
     }
 

@@ -12,7 +12,7 @@ const validateWorkout = async (req, res, next) => {
         currentDay = currentDate.getDate();
     // Verify if date is correct
     // TODO: Verify all possible dates
-    if (completedAt[0] > currentYear || completedAt[0] < 2023 ) {
+    if (completedAt[0] > currentYear || completedAt[0] < 2023) {
         res.status(httpStatus.BAD_REQUEST).send("Incorrect date!");
         return;
     }
@@ -31,7 +31,7 @@ const validateWorkout = async (req, res, next) => {
 
     // verify duration
     const duration = req.body['duration'];
-    if(duration < 1 || duration > 1440){
+    if (duration < 1 || duration > 1440) {
         res.status(httpStatus.BAD_REQUEST).send("Incorrect duration!");
         return;
     }
@@ -41,7 +41,7 @@ const validateWorkout = async (req, res, next) => {
     console.log(typeof exercises);
     try {
         const result = JSON.stringify(exercises);
-        } catch (e) {
+    } catch (e) {
         res.status(httpStatus.BAD_REQUEST).send("Error parsing exercise json");
         console.error(e, e.stack);
         return;

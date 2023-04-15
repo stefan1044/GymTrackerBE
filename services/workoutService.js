@@ -2,7 +2,7 @@ const WorkoutModel = require('../models/workoutModel');
 const UserModel = require('../models/userModel');
 
 const getAllWorkoutsByUser = async (userId, config = {}) => {
-    if (await WorkoutModel.doesUserIdExist(userId) === false){
+    if (await WorkoutModel.doesUserIdExist(userId) === false) {
         throw new Error("No workouts for given userId");
     }
 
@@ -18,7 +18,7 @@ const getWorkoutById = async (id, config = {}) => {
 }
 
 const createWorkout = async (userId, completedAt, duration, exercises, config = {}) => {
-    if (await UserModel.doesIdExist(userId) === false){
+    if (await UserModel.doesIdExist(userId) === false) {
         throw new Error("Cannot create workout for nonexistent user!");
     }
 

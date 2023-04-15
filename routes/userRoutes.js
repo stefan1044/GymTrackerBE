@@ -9,7 +9,7 @@ router.get("/all", userController.readUsers); // not sure if needed
 router.get("/id/:id", userController.readUserById); // not sure if needed
 router.get("/login", userValidator.validateUsername, userValidator.validatePassword, userController.loginUser);
 
-router.post("/", userValidator.validateUsername, userValidator.validatePassword, userController.createUser);
+router.post("/", userValidator.validateUsername, userValidator.validatePassword, userValidator.validateEmail, userController.createUser);
 
 router.put("/changeuser/:id", userValidator.validateUsername, userController.updateUsername);
 router.put("/changepass/:id", userValidator.validatePassword, userController.updatePassword);

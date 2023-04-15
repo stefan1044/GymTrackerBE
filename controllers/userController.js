@@ -27,7 +27,7 @@ const readUserById = async (req, res) => {
     await userService.getUserById(req.params.id).then((rows) => {
         res.status(httpStatus.OK).json(rows.rows);
     }).catch(e => {
-        if ( e.message === "User with provided user_id does not exist!"){
+        if (e.message === "User with provided user_id does not exist!") {
             res.status(httpStatus.NOT_FOUND).send("User with provided user_id does not exist!");
             return;
         }
@@ -38,14 +38,14 @@ const readUserById = async (req, res) => {
 }
 
 const updateUsername = async (req, res) => {
-    await userService.modifyUsername( req.params.id, req.body['user_name']).then((rows) => {
+    await userService.modifyUsername(req.params.id, req.body['user_name']).then((rows) => {
         res.status(httpStatus.OK).send();
-    }).catch(e=>{
-        if ( e.message === "User with id does not exist!"){
+    }).catch(e => {
+        if (e.message === "User with id does not exist!") {
             res.status(httpStatus.NOT_FOUND).send("User with provided user_id does not exist!");
             return;
         }
-        if ( e.message === "Username taken!"){
+        if (e.message === "Username taken!") {
             res.status(httpStatus.NOT_FOUND).send("Username is already taken!");
             return;
         }
@@ -57,8 +57,8 @@ const updateUsername = async (req, res) => {
 const updatePassword = async (req, res) => {
     await userService.modifyPassword(req.params.id, req.body['password']).then((rows) => {
         res.status(httpStatus.OK).send();
-    }).catch(e=>{
-        if ( e.message === "User with id does not exist!"){
+    }).catch(e => {
+        if (e.message === "User with id does not exist!") {
             res.status(httpStatus.NOT_FOUND).send("User with provided user_id does not exist!");
             return;
         }
@@ -70,8 +70,8 @@ const updatePassword = async (req, res) => {
 const updateEmail = async (req, res) => {
     await userService.modifyEmail(req.params.id, req.body['email']).then((rows) => {
         res.status(httpStatus.OK).send();
-    }).catch(e=>{
-        if ( e.message === "User with id does not exist!"){
+    }).catch(e => {
+        if (e.message === "User with id does not exist!") {
             res.status(httpStatus.NOT_FOUND).send("User with provided user_id does not exist!");
             return;
         }
@@ -84,8 +84,8 @@ const updateEmail = async (req, res) => {
 const deleteUser = async (req, res) => {
     await userService.removeUser(req.params.id).then((rows) => {
         res.status(httpStatus.OK).send();
-    }).catch(e=>{
-        if ( e.message === "User with id does not exist!"){
+    }).catch(e => {
+        if (e.message === "User with id does not exist!") {
             res.status(httpStatus.NOT_FOUND).send("User with provided user_id does not exist!");
             return;
         }
@@ -97,14 +97,13 @@ const deleteUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
     await userService.loginUser(req.body['user_name'], req.body['password']).then((ok) => {
-        if (!ok){
+        if (!ok) {
             res.status(httpStatus.NOT_FOUND).send("Invalid username or password!");
-        }
-        else{
+        } else {
             res.status(httpStatus.OK).send("Logged in!");
         }
-    }).catch(e=>{
-        if (e.message === "User with provided username does not exist!"){
+    }).catch(e => {
+        if (e.message === "User with provided username does not exist!") {
             res.status(httpStatus.NOT_FOUND).send("Invalid username or password");
             return;
         }
