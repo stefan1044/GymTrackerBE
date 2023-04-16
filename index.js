@@ -1,9 +1,28 @@
+require('dotenv').config();
+const httpStatus = require('http-status');
 const express = require('express');
 const app = express();
-const cors = require('cors');
 
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+const middlewares = require('./utils/middlewares');
+middlewares(app);
 
-module.exports = app;
+const mountRoutes = require('./routes/api');
+mountRoutes(app);
+
+// send 404 for unknown routes
+app.use((req, res) => {
+    res.status(httpStatus.NOT_FOUND).send("Route does not exist!");
+});
+
+const port = process.env.PORT;
+console.log(`Node environment: ${process.env.NODE_ENV}`);
+server = app.listen(port, () => {
+    console.log(`App listening at port http://localhost:${port}`);
+})
+
+process.on("SIGTERM", ()=>{
+    console.log("CLOSED BY SIGTERM");
+    if (server){
+        server.close();
+    }
+});
