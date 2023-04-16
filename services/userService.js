@@ -4,7 +4,9 @@ const {Api400Error, Api404Error, InoperableApiError} = require('../utils/errorHa
 
 
 const getAllUsers = async (config = {}) => {
-    return UserModel.getAll(config);
+    return UserModel.getAll(config).catch(e => {
+        throw new InoperableApiError("Error in userService.getAllUsers");
+    });
 }
 const getUserById = async (id, config = {}) => {
     const rows = await UserModel.getOneById(id, config).catch(e => {
@@ -18,7 +20,7 @@ const getUserById = async (id, config = {}) => {
 }
 const loginUser = async (username, password, config = {}) => {
     if (await UserModel.doesUsernameExist(username) === false) {
-        throw new Api404Error("User with provided username does not exist!");
+        return false;
     }
 
     const dbPassword = await UserModel.getPassword(username, config).catch(e => {
@@ -40,7 +42,7 @@ const modifyUsername = async (id, username, config = {}) => {
     if (await UserModel.doesIdExist(id) === false) {
         throw new Api404Error("User with id does not exist!");
     }
-    if (await UserModel.doesUsernameExist((username))) {
+    if (await UserModel.doesUsernameExist(username)) {
         throw new Api400Error("Username taken!");
     }
 

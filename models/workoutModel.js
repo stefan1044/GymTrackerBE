@@ -29,7 +29,7 @@ const WorkoutModel = {
         }
         const values = [id];
 
-        return db.query(query, values).then((rows) => {
+        return db.query(query, values).then(rows => {
             return rows.rows[0]['exists'];
         }).catch(e => {
             console.log(e.message, e.stack);
@@ -42,7 +42,7 @@ const WorkoutModel = {
         }
         const values = [id];
 
-        return db.query(query, values).then((rows) => {
+        return db.query(query, values).then(rows => {
             return rows.rows[0]['exists'];
         }).catch(e => {
             console.log(e.message, e.stack);
