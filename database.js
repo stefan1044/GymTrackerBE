@@ -1,33 +1,63 @@
 const {Client} = require('pg');
-const connectDb = () => {
-    try {
-        const client = new Client({
-            user: process.env.DB_USERNAME,
-            host: process.env.DB_HOST,
-            database: process.env.DB_DATABASE,
-            password: process.env.DB_PASSWORD,
-            port: process.env.DB_PORT
-        })
+const {Pool} = require('pg');
 
-        client.connect();
-        client.on("notice", (msg) => console.warn("notice:", msg));
-        client.on("error", (err) => {
-            console.error("Db client encountered errors!", err.stack);
-        });
-        client.on("end", () => {
-            console.log("Db client closed!");
-        });
-
-        client.query("SELECT NOW()").then((result) => console.log(`Pinged successfully! ${result.rows[0]['now']}`)).catch((err) => {
-            console.error("Ping error!", err.stack)
-            client.end();
-        });
-        return client;
-    } catch (error) {
-        console.error("Db connection error!", error.stack);
-    }
+const config = {
+    database: process.env.DB_DATABASE,
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    user: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    tsl: true,
+    max: 50,
+    idleTimeoutMillis: 3000,
+    connectionTimeoutMillis: 1000,
+    maxUses: 7500
 }
+const pool = new Pool(config);
+let connectionCount = 0;
+let acquireCount = 0;
+pool.on("end", () => console.log("Pool closed!"))
+pool.on("error", (e, client) => {
+    console.error("Db client encountered errors!", e.message, e.stack);
+    client.release();
+});
+pool.on("notice", msg => console.warn("Pool notice", msg));
+pool.on("connect", client => {
+    connectionCount++;
+    console.log("Client connected!");
+});
+pool.on("acquire", client => {
+    acquireCount++;
+    console.log("Client acquired!");
+});
 
-db = connectDb();
+pool.connect().then(client => {
+    client.query("SELECT NOW()").then(rows => {
+        console.log(`Pinged successfully! ${rows.rows[0]['now']}`)
+    }).catch(e => {
+        client.release();
+        console.log("Ping error!", e.message, e.stack);
+    });
+}).catch(e => {
+    pool.end();
+    console.error("Db connection error!", e.message, e.stack);
+});
 
-module.exports = db;
+if (process.env.NODE_ENV === "development") {
+    module.exports = {
+        async query(text, params) {
+            const start = Date.now()
+            const res = await pool.query(text, params)
+            const duration = Date.now() - start
+            console.log('executed query', {text, duration, rows: res.rowCount})
+            return res
+        },
+    };
+}
+else {
+    module.exports = {
+        async query(text, params) {
+            return pool.query(text, params)
+        },
+    };
+}

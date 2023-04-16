@@ -24,5 +24,6 @@ process.on("SIGTERM", ()=>{
     console.log("CLOSED BY SIGTERM");
     if (server){
         server.close();
+        //pool.end();
     }
 });
