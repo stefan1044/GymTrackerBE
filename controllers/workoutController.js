@@ -28,8 +28,8 @@ const readWorkoutById = async (req, res) => {
     })
 }
 const readWorkoutsByUserId = async (req, res) => {
-    await workoutService.getAllWorkoutsByUser(req.params.id).then((rows) => {
-        res.status(httpStatus.OK).json(rows.rows);
+    await workoutService.getAllWorkoutsByUser(req.params.id).then(rows => {
+        res.status(httpStatus.OK).json(rows);
     }).catch(e => {
         if (e.message === "No workouts for given userId") {
             res.status(httpStatus.NOT_FOUND).send("No workouts for given userId");

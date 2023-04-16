@@ -60,7 +60,7 @@ const UserModel = {
         const values = [id];
 
         return db.query(query, values);
-    }, isUsernameTaken: async function (username) {
+    }, doesUsernameExist: async function (username) {
         const query = {
             text: "SELECT exists (SELECT 1 FROM  users WHERE user_name = $1 LIMIT 1)",
         }
@@ -70,7 +70,7 @@ const UserModel = {
             return rows.rows[0]['exists'];
         }).catch(e => {
             console.log(e.message)
-            throw new Api500Error("Error in isUsernameTaken!");
+            throw new Api500Error("Error in doesUsernameExist!");
         });
     }, doesIdExist: async function (id) {
         const query = {

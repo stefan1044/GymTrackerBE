@@ -24,8 +24,8 @@ const readUsers = async (req, res) => {
     })
 }
 const readUserById = async (req, res) => {
-    await userService.getUserById(req.params.id).then((rows) => {
-        res.status(httpStatus.OK).json(rows.rows);
+    await userService.getUserById(req.params.id).then(rows => {
+        res.status(httpStatus.OK).json(rows);
     }).catch(e => {
         if (e.message === "User with provided user_id does not exist!") {
             res.status(httpStatus.NOT_FOUND).send("User with provided user_id does not exist!");

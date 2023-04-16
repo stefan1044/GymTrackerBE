@@ -32,7 +32,7 @@ const WorkoutModel = {
         return db.query(query, values).then((rows) => {
             return rows.rows[0]['exists'];
         }).catch(e => {
-            console.log(e.message);
+            console.log(e.message, e.stack);
             throw new Api500Error("Error in doesWorkoutIdExist!");
         })
 
@@ -45,7 +45,7 @@ const WorkoutModel = {
         return db.query(query, values).then((rows) => {
             return rows.rows[0]['exists'];
         }).catch(e => {
-            console.log(e.message);
+            console.log(e.message, e.stack);
             throw new Api500Error("Error in doesUserIdExist!");
         })
     }
