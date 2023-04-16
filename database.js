@@ -46,16 +46,15 @@ if (process.env.NODE_ENV === "development") {
     });
 
     module.exports = {
-        async query(text, params) {
+        async query(text, values = []) {
             const start = Date.now()
-            const res = await pool.query(text, params)
+            const res = await pool.query(text, values)
             const duration = Date.now() - start
             console.log('executed query', {text, duration, rows: res.rowCount})
             return res
         },
     };
-}
-else {
+} else {
     pool.on("end", () => console.log("Pool closed!"))
     pool.on("error", (e, client) => {
         client.release();
@@ -78,8 +77,8 @@ else {
     });
 
     module.exports = {
-        async query(text, params) {
-            return pool.query(text, params)
+        async query(text, values = []) {
+            return pool.query(text, values)
         },
     };
 }
