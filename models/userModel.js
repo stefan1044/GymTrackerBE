@@ -1,5 +1,6 @@
-const db = require("../database");
-const {encrypt} = require("../utils/passwordHasher");
+const db = require('../database');
+const {encrypt} = require('../utils/passwordHasher');
+const {Api500Error} = require('../utils/errorHandler');
 
 const UserModel = {
     getAll: async function (config = {}) {
@@ -69,7 +70,7 @@ const UserModel = {
             return rows.rows[0]['exists'];
         }).catch(e => {
             console.log(e.message)
-            throw new Error("Error in isUsernameTaken!");
+            throw new Api500Error("Error in isUsernameTaken!");
         });
     }, doesIdExist: async function (id) {
         const query = {
@@ -81,7 +82,7 @@ const UserModel = {
             return rows.rows[0]['exists'];
         }).catch(e => {
             console.log(e.message);
-            throw new Error("Error in doesIdExist!");
+            throw new Api500Error("Error in doesIdExist!");
         });
     }
 }
