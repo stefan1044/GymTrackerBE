@@ -2,7 +2,7 @@ const httpStatus = require('http-status');
 const workoutService = require('../services/workoutService');
 
 const createWorkout = async (req, res) => {
-    await workoutService.createWorkout(req.params.user_id, req.body['completed_at'], req.body['duration'], req.body['exercises']).then((rows) => {
+    await workoutService.createWorkout(req.params.user_id, req.body['completed_at'], req.body['duration'], req.body['exercises']).then(rows => {
         res.status(httpStatus.CREATED).send();
     }).catch(e => {
         if (e.message === "Cannot create workout for nonexistent user!") {
@@ -16,7 +16,7 @@ const createWorkout = async (req, res) => {
 }
 
 const readWorkoutById = async (req, res) => {
-    await workoutService.getWorkoutById(req.params.id).then((rows) => {
+    await workoutService.getWorkoutById(req.params.id).then(rows => {
         res.status(httpStatus.OK).json(rows.rows);
     }).catch(e => {
         if (e.message === "Workout with provided workout_id does not exist!") {

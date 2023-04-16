@@ -96,7 +96,7 @@ const deleteUser = async (req, res) => {
 }
 
 const loginUser = async (req, res) => {
-    await userService.loginUser(req.body['user_name'], req.body['password']).then((ok) => {
+    await userService.loginUser(req.body['user_name'], req.body['password']).then(ok => {
         if (!ok) {
             res.status(httpStatus.NOT_FOUND).send("Invalid username or password!");
         } else {
