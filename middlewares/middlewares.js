@@ -9,8 +9,8 @@ const authLimiter = rateLimit({
 });
 
 module.exports = app => {
-    app.use(helmet())
-    app.use(compression())
+    app.use(helmet());
+    app.use(compression());
     app.use(cors());
     app.use(express.json());
     if (process.env.NODE_ENV === "development") {

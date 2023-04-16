@@ -7,13 +7,10 @@ const createUser = async (req, res, next) => {
         res.status(httpStatus.CREATED).send();
     }).catch(e => {
         if (e.statusCode === httpStatus.BAD_REQUEST) {
-            res.status(httpStatus.BAD_REQUEST).send("Username is already taken!");
-            //e.message = "Username is already taken!";
-            //next(e);
+            e.message = "Username is already taken!";
+            next(e);
         } else {
-            res.status(httpStatus.NOT_FOUND).send("Error when creating user!");
-            console.log(e.message, e.stack);
-            //next(e);
+            next(e);
         }
     });
 }
@@ -22,9 +19,7 @@ const readUsers = async (req, res, next) => {
     await userService.getAllUsers().then(rows => {
         res.status(httpStatus.OK).json(rows.rows);
     }).catch(e => {
-        res.status(httpStatus.NOT_FOUND).send("Error when getting all users!");
-        console.log(e.message, e.stack);
-        //next(e);
+        next(e);
     });
 }
 const readUserById = async (req, res, next) => {
@@ -32,13 +27,10 @@ const readUserById = async (req, res, next) => {
         res.status(httpStatus.OK).json(rows);
     }).catch(e => {
         if (e.statusCode === httpStatus.NOT_FOUND) {
-            res.status(httpStatus.NOT_FOUND).send("User with provided user_id does not exist!");
-            //e.message = "User with provided user_id does not exist!";
-            //next(e);
+            e.message = "User with provided user_id does not exist!";
+            next(e);
         } else {
-            res.status(httpStatus.NOT_FOUND).send("Error when getting user!");
-            console.log(e.message, e.stack);
-            //next(e);
+            next(e);
         }
     })
 }
@@ -48,18 +40,13 @@ const updateUsername = async (req, res, next) => {
         res.status(httpStatus.OK).send();
     }).catch(e => {
         if (e.statusCode === httpStatus.NOT_FOUND) {
-            res.status(httpStatus.NOT_FOUND).send("User with provided user_id does not exist!");
-            //e.message = "User with provided user_id does not exist!";
-            //next(e)
-
+            e.message = "User with provided user_id does not exist!";
+            next(e)
         } else if (e.statusCode === httpStatus.BAD_REQUEST) {
-            res.status(httpStatus.NOT_FOUND).send("Username is already taken!");
-            //e.message = "Username is already taken!";
-            //next(e);
+            e.message = "Username is already taken!";
+            next(e);
         } else {
-            res.status(httpStatus.NOT_FOUND).send("Error when modifying user username!");
-            console.log(e.message, e.stack);
-            //next(e);
+            next(e);
         }
     });
 }
@@ -68,13 +55,10 @@ const updatePassword = async (req, res, next) => {
         res.status(httpStatus.OK).send();
     }).catch(e => {
         if (e.statusCode === httpStatus.NOT_FOUND) {
-            res.status(httpStatus.NOT_FOUND).send("User with provided user_id does not exist!");
-            //e.message = "User with provided user_id does not exist!";
-            //next(e)
+            e.message = "User with provided user_id does not exist!";
+            next(e)
         } else {
-            res.status(httpStatus.NOT_FOUND).send("Error when modifying user password!");
-            console.log(e.message, e.stack);
-            //next(e)
+            next(e)
         }
     });
 }
@@ -83,13 +67,10 @@ const updateEmail = async (req, res, next) => {
         res.status(httpStatus.OK).send();
     }).catch(e => {
         if (e.statusCode === httpStatus.NOT_FOUND) {
-            res.status(httpStatus.NOT_FOUND).send("User with provided user_id does not exist!");
-            //e.message = "User with provided user_id does not exist!";
-            //next(e)
+            e.message = "User with provided user_id does not exist!";
+            next(e)
         } else {
-            res.status(httpStatus.NOT_FOUND).send("Error when modifying user email!");
-            console.log(e.message, e.stack);
-            //next(e)
+            next(e)
         }
     });
 }
@@ -99,13 +80,10 @@ const deleteUser = async (req, res, next) => {
         res.status(httpStatus.OK).send();
     }).catch(e => {
         if (e.statusCode === httpStatus.NOT_FOUND) {
-            res.status(httpStatus.NOT_FOUND).send("User with provided user_id does not exist!");
-            //e.message = "User with provided user_id does not exist!";
-            //next(e)
+            e.message = "User with provided user_id does not exist!";
+            next(e)
         } else {
-            res.status(httpStatus.NOT_FOUND).send("Error when deleting user!");
-            console.log(e.message, e.stack);
-            //next(e)
+            next(e)
         }
     });
 }
@@ -118,9 +96,7 @@ const loginUser = async (req, res, next) => {
             res.status(httpStatus.NOT_FOUND).send("Invalid username or password!");
         }
     }).catch(e => {
-        res.status(httpStatus.NOT_FOUND).send("Error when logging in!");
-        console.log(e, e.stack);
-        //next(e);
+        next(e);
     });
 }
 

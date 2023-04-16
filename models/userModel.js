@@ -1,6 +1,6 @@
 const db = require('../database');
 const {encrypt} = require('../utils/passwordHasher');
-const {Api500Error} = require('../utils/errorHandler');
+const {Api500Error} = require('../utils/errors');
 
 const UserModel = {
     getAll: async (config = {}) => {

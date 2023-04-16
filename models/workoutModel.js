@@ -1,5 +1,5 @@
 const db = require('../database');
-const {Api500Error} = require('../utils/errorHandler');
+const {Api500Error} = require('../utils/errors');
 
 const WorkoutModel = {
     getAllFromUser: async (userName, config = {}) => {

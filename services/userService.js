@@ -1,6 +1,6 @@
 const UserModel = require('../models/userModel');
 const {compare} = require('../utils/passwordHasher');
-const {Api400Error, Api404Error, InoperableApiError} = require('../utils/errorHandler');
+const {Api400Error, Api404Error, InoperableApiError} = require('../utils/errors');
 
 
 const getAllUsers = async (config = {}) => {

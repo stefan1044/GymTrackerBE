@@ -1,6 +1,6 @@
 const WorkoutModel = require('../models/workoutModel');
 const UserModel = require('../models/userModel');
-const {Api404Error, InoperableApiError} = require('../utils/errorHandler');
+const {Api404Error, InoperableApiError} = require('../utils/errors');
 
 
 const getAllWorkoutsByUser = async (userId, config = {}) => {
