@@ -1,5 +1,6 @@
 const {Pool} = require('pg');
 
+
 const config = {
     database: process.env.DB_DATABASE,
     host: process.env.DB_HOST,
@@ -11,11 +12,10 @@ const config = {
     idleTimeoutMillis: 3000,
     connectionTimeoutMillis: 1000,
     maxUses: 7500
-}
+};
 const pool = new Pool(config);
 let connectionCount = 0;
 let acquireCount = 0;
-
 
 if (process.env.NODE_ENV === "development") {
     pool.on("end", () => console.log("Pool closed!"))
@@ -45,6 +45,7 @@ if (process.env.NODE_ENV === "development") {
         console.error("Db connection error!", e.message, e.stack);
     });
 
+
     module.exports = {
         async query(text, values = []) {
             const start = Date.now()
@@ -53,6 +54,7 @@ if (process.env.NODE_ENV === "development") {
             console.log('executed query', {text, duration, rows: res.rowCount})
             return res
         },
+        end: pool.end,
     };
 } else {
     pool.on("end", () => console.log("Pool closed!"))
@@ -76,9 +78,11 @@ if (process.env.NODE_ENV === "development") {
         pool.end();
     });
 
+
     module.exports = {
         async query(text, values = []) {
             return pool.query(text, values)
         },
+        end: pool.end,
     };
 }

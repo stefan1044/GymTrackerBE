@@ -1,12 +1,13 @@
 const httpStatus = require('http-status');
 
+
 const validateWorkout = async (req, res, next) => {
     // format the dates into integers
     const completedAt = req.body['completed_at'].split("-").map(value => {
         if (value[0] === "0") {
             return parseInt(value[1]);
         } else return parseInt(value);
-    })
+    });
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear(), currentMonth = currentDate.getMonth() + 1,
         currentDay = currentDate.getDate();
@@ -40,7 +41,7 @@ const validateWorkout = async (req, res, next) => {
     const exercises = req.body['exercises'];
     console.log(typeof exercises);
     try {
-        const result = JSON.stringify(exercises);
+        JSON.stringify(exercises);
     } catch (e) {
         res.status(httpStatus.BAD_REQUEST).send("Error parsing exercise json");
         console.error(e, e.stack);
@@ -49,8 +50,8 @@ const validateWorkout = async (req, res, next) => {
 
 
     next();
-}
+};
 
 module.exports = {
     validateWorkout
-}
+};

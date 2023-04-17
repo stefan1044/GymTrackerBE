@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 
 
-const encrypt = (password) => {
+const encrypt = password => {
     const saltRounds = 8;
 
     return bcrypt.hash(password, saltRounds).then(hash => {
@@ -10,16 +10,16 @@ const encrypt = (password) => {
         console.log(e, e.stack);
     });
 
-}
+};
 const compare = (password, hash) => {
     return bcrypt.compare(password, hash).then(result => {
         return result;
     }).catch(e => {
         console.log("Error" +e.message);
     });
-}
+};
 
 
 module.exports = {
     encrypt, compare
-}
+};

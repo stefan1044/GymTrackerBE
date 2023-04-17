@@ -11,7 +11,7 @@ const getAllWorkoutsByUser = async (userId, config = {}) => {
     return WorkoutModel.getAllFromUser(userId).catch(e => {
         throw new InoperableApiError("Error in workoutService.getAllWorkoutsByUser");
     });
-}
+};
 const getWorkoutById = async (id, config = {}) => {
     const rows = await WorkoutModel.getOneById(id, config).catch(e => {
         throw new InoperableApiError("Error in workoutService.getWorkoutById");
@@ -21,7 +21,7 @@ const getWorkoutById = async (id, config = {}) => {
         throw new Api404Error("Workout with provided workout_id does not exist!");
     }
     return rows.rows;
-}
+};
 
 const createWorkout = async (userId, completedAt, duration, exercises, config = {}) => {
     if (await UserModel.doesIdExist(userId) === false) {
@@ -31,8 +31,9 @@ const createWorkout = async (userId, completedAt, duration, exercises, config = 
     return WorkoutModel.create(userId, completedAt, duration, exercises, config).catch(e => {
         throw new InoperableApiError("Error in workoutService.createWorkout");
     });
-}
+};
+
 
 module.exports = {
     getAllWorkoutsByUser, getWorkoutById, createWorkout
-}
+};

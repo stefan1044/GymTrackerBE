@@ -7,7 +7,7 @@ const getAllUsers = async (config = {}) => {
     return UserModel.getAll(config).catch(e => {
         throw new InoperableApiError("Error in userService.getAllUsers");
     });
-}
+};
 const getUserById = async (id, config = {}) => {
     const rows = await UserModel.getOneById(id, config).catch(e => {
         throw new InoperableApiError("Error in userService.getUserById!");
@@ -17,7 +17,7 @@ const getUserById = async (id, config = {}) => {
     }
 
     return rows.rows;
-}
+};
 const loginUser = async (username, password, config = {}) => {
     if (await UserModel.doesUsernameExist(username) === false) {
         return false;
@@ -28,7 +28,7 @@ const loginUser = async (username, password, config = {}) => {
     });
 
     return compare(password, dbPassword.rows[0]['password']);
-}
+};
 
 const createUser = async (username, password, email, config = {}) => {
     if (await UserModel.doesUsernameExist(username)) {
@@ -36,7 +36,7 @@ const createUser = async (username, password, email, config = {}) => {
     }
 
     return UserModel.create(username, password, email, config)
-}
+};
 
 const modifyUsername = async (id, username, config = {}) => {
     if (await UserModel.doesIdExist(id) === false) {
@@ -47,21 +47,21 @@ const modifyUsername = async (id, username, config = {}) => {
     }
 
     return UserModel.modifyUsername(id, username, config);
-}
+};
 const modifyPassword = async (id, password, config = {}) => {
     if (await UserModel.doesIdExist(id) === false) {
         throw new Api404Error("User with id does not exist!");
     }
 
     return UserModel.modifyPassword(id, password, config);
-}
+};
 const modifyEmail = async (id, email, config = {}) => {
     if (await UserModel.doesIdExist(id) === false) {
         throw new Api404Error("User with id does not exist!");
     }
 
     return UserModel.modifyEmail(id, email, config);
-}
+};
 
 const removeUser = async (id, config = {}) => {
     if (await UserModel.doesIdExist(id) === false) {
@@ -69,8 +69,8 @@ const removeUser = async (id, config = {}) => {
     }
 
     return UserModel.remove(id, config);
-}
+};
 
 module.exports = {
     getAllUsers, getUserById, loginUser, createUser, modifyUsername, modifyPassword, modifyEmail, removeUser
-}
+};

@@ -4,6 +4,7 @@ const router = new Router();
 
 const workoutController = require('../controllers/workoutController');
 
+
 router.get("/:id", workoutController.readWorkoutById);
 router.get("/user/:id", workoutController.readWorkoutsByUserId);
 

@@ -1,5 +1,6 @@
 const httpStatus = require('http-status');
 
+
 const validateUsername = async (req, res, next) => {
     let userName = req.body['user_name'];
     if (userName === undefined) {
@@ -20,7 +21,7 @@ const validateUsername = async (req, res, next) => {
     }
 
     next();
-}
+};
 
 const validatePassword = async (req, res, next) => {
     let password = req.body['password'];
@@ -42,7 +43,7 @@ const validatePassword = async (req, res, next) => {
     }
 
     next()
-}
+};
 
 const validateEmail = async (req, res, next) => {
     const email = req.body['email'];
@@ -52,8 +53,9 @@ const validateEmail = async (req, res, next) => {
     }
 
     next();
-}
+};
+
 
 module.exports = {
     validatePassword, validateUsername, validateEmail
-}
+};

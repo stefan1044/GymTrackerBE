@@ -12,4 +12,4 @@ module.exports = app => {
         res.status(NOT_FOUND).send("Route does not exist!");
     });
     app.use(errorMiddleware.errorHandler);
-}
+};

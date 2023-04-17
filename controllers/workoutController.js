@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const workoutService = require('../services/workoutService');
 
+
 const createWorkout = async (req, res, next) => {
     await workoutService.createWorkout(req.params.user_id, req.body['completed_at'], req.body['duration'], req.body['exercises']).then(rows => {
         res.status(httpStatus.CREATED).send();
@@ -12,7 +13,7 @@ const createWorkout = async (req, res, next) => {
             next(e);
         }
     });
-}
+};
 
 const readWorkoutById = async (req, res, next) => {
     await workoutService.getWorkoutById(req.params.id).then(rows => {
@@ -25,7 +26,7 @@ const readWorkoutById = async (req, res, next) => {
             next(e);
         }
     });
-}
+};
 const readWorkoutsByUserId = async (req, res, next) => {
     await workoutService.getAllWorkoutsByUser(req.params.id).then(rows => {
         res.status(httpStatus.OK).json(rows);
@@ -37,9 +38,9 @@ const readWorkoutsByUserId = async (req, res, next) => {
             next(e)
         }
     });
-}
+};
 
 
 module.exports = {
     createWorkout, readWorkoutById, readWorkoutsByUserId
-}
+};

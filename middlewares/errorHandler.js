@@ -1,6 +1,7 @@
 const errors = require('../utils/errors');
 const {ApiError} = require("../utils/errors");
 
+
 ENV = process.env.NODE_ENV;
 const errorHandler = async (err, req, res, next) => {
 
@@ -10,7 +11,7 @@ const errorHandler = async (err, req, res, next) => {
 
     const response = {
         code: err.statusCode, message: err.message, ...(ENV === "development" && {stack: err.stack})
-    }
+    };
     if (ENV === "development") {
         console.log(err);
     }
@@ -21,8 +22,9 @@ const errorHandler = async (err, req, res, next) => {
         process.kill(process.pid, "SIGTERM");
         // TODO: Restart server when closing;
     }
-}
+};
+
 
 module.exports = {
     errorHandler
-}
+};

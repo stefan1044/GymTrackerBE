@@ -13,7 +13,7 @@ const createUser = async (req, res, next) => {
             next(e);
         }
     });
-}
+};
 
 const readUsers = async (req, res, next) => {
     await userService.getAllUsers().then(rows => {
@@ -21,7 +21,7 @@ const readUsers = async (req, res, next) => {
     }).catch(e => {
         next(e);
     });
-}
+};
 const readUserById = async (req, res, next) => {
     await userService.getUserById(req.params.id).then(rows => {
         res.status(httpStatus.OK).json(rows);
@@ -33,7 +33,7 @@ const readUserById = async (req, res, next) => {
             next(e);
         }
     })
-}
+};
 
 const updateUsername = async (req, res, next) => {
     await userService.modifyUsername(req.params.id, req.body['user_name']).then(rows => {
@@ -49,7 +49,7 @@ const updateUsername = async (req, res, next) => {
             next(e);
         }
     });
-}
+};
 const updatePassword = async (req, res, next) => {
     await userService.modifyPassword(req.params.id, req.body['password']).then(rows => {
         res.status(httpStatus.OK).send();
@@ -61,7 +61,7 @@ const updatePassword = async (req, res, next) => {
             next(e)
         }
     });
-}
+};
 const updateEmail = async (req, res, next) => {
     await userService.modifyEmail(req.params.id, req.body['email']).then(rows => {
         res.status(httpStatus.OK).send();
@@ -73,7 +73,7 @@ const updateEmail = async (req, res, next) => {
             next(e)
         }
     });
-}
+};
 
 const deleteUser = async (req, res, next) => {
     await userService.removeUser(req.params.id).then(rows => {
@@ -86,7 +86,7 @@ const deleteUser = async (req, res, next) => {
             next(e)
         }
     });
-}
+};
 
 const loginUser = async (req, res, next) => {
     await userService.loginUser(req.body['user_name'], req.body['password']).then(ok => {
@@ -98,8 +98,9 @@ const loginUser = async (req, res, next) => {
     }).catch(e => {
         next(e);
     });
-}
+};
+
 
 module.exports = {
     createUser, readUsers, readUserById, updateUsername, updatePassword, deleteUser, loginUser, updateEmail
-}
+};
