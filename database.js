@@ -1,5 +1,5 @@
 const {Pool} = require('pg');
-
+const logger = require('./utils/logger');
 
 const config = {
     database: process.env.DB_DATABASE,
@@ -18,50 +18,50 @@ let connectionCount = 0;
 let acquireCount = 0;
 
 if (process.env.NODE_ENV === "development") {
-    pool.on("end", () => console.log("Pool closed!"))
+    pool.on("end", () =>  logger.info(`Pool closed!`));
     pool.on("error", (e, client) => {
-        console.error("Db client encountered errors!", e.message, e.stack);
+        logger.error(`Db client encountered errors!\nError message: ${e.message} with stack:\n ${e.stack}`);
         client.release();
     });
     pool.on("notice", msg => console.warn("Pool notice", msg));
     pool.on("connect", client => {
         connectionCount++;
-        console.log("Client connected!");
+        logger.info(`Client connected!`);
     });
     pool.on("acquire", client => {
         acquireCount++;
-        console.log("Client acquired!");
+        logger.info("Client acquired!");
     });
 
     pool.connect().then(client => {
-        client.query("SELECT NOW()").then(rows => {
-            console.log(`Pinged successfully! ${rows.rows[0]['now']}`);
-        }).catch(e => {
+        client.query("SELECT NOW()").then(rows =>
+            logger.info(`Pinged successfully! ${rows.rows[0]['now']}`)
+        ).catch(e => {
             client.release();
-            console.log("Ping error!", e.message, e.stack);
+            logger.error(`Ping error!\nError message: ${e.message} with stack:\n ${e.stack}`);
         });
     }).catch(e => {
         pool.end();
-        console.error("Db connection error!", e.message, e.stack);
+        logger.error(`Db connection error!\nError message: ${e.message} with stack:\n ${e.stack}`);
     });
 
 
     module.exports = {
         async query(text, values = []) {
-            const start = Date.now()
-            const res = await pool.query(text, values)
-            const duration = Date.now() - start
-            console.log('executed query', {text, duration, rows: res.rowCount})
-            return res
+            const start = Date.now();
+            const res = await pool.query(text, values);
+            const duration = Date.now() - start;
+            logger.info(`executed query ${text.text} Duration:${duration} Returned rows:${res.rowCount}` );
+            return res;
         },
         end: pool.end,
     };
 } else {
-    pool.on("end", () => console.log("Pool closed!"))
+    pool.on("end", () => logger.info(`Pool closed!`));
     pool.on("error", (e, client) => {
         client.release();
     });
-    pool.on("notice", msg => console.warn("Pool notice", msg));
+    pool.on("notice", msg => logger.warn(`Pool notice: ${msg}`));
     pool.on("connect", client => {
         connectionCount++;
     });

@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const pool = require('./database');
+const logger = require('./utils/logger');
 
 const middlewares = require('./middlewares/middlewares');
 middlewares(app);
@@ -11,13 +12,32 @@ mountRoutes(app);
 
 
 const port = process.env.PORT;
-console.log(`Node environment: ${process.env.NODE_ENV}`);
+logger.log({
+    level: "info",
+    message: `Node environment: ${process.env.NODE_ENV}`
+});
 server = app.listen(port, () => {
-    console.log(`App listening at port http://localhost:${port}`);
+    logger.log({
+        level: "info",
+        message: `App listening at port http://localhost:${port}`
+    });
 });
 
 process.on("SIGTERM", () => {
-    console.log("CLOSED BY SIGTERM");
+    logger.log({
+        level: "info",
+        message: `Received SIGTERM`
+    });
+    if (server) {
+        server.close();
+        pool.end();
+    }
+});
+process.on("SIGINT", () => {
+    logger.log({
+        level: "info",
+        message: ` Received SIGINT`
+    });
     if (server) {
         server.close();
         pool.end();

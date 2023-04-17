@@ -13,7 +13,8 @@
     "helmet": "^6.1.5",
     "http-status": "^1.6.2",
     "morgan": "^1.10.0",
-    "pg": "^8.10.0"
+    "pg": "^8.10.0",
+    "winston": "^3.8.2"
   },
   "main": "index.js",
   "scripts": {

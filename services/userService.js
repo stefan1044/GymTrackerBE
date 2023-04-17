@@ -1,15 +1,18 @@
 const UserModel = require('../models/userModel');
+const logger = require('../utils/logger');
 const {compare} = require('../utils/passwordHasher');
 const {Api400Error, Api404Error, InoperableApiError} = require('../utils/errors');
 
 
 const getAllUsers = async (config = {}) => {
     return UserModel.getAll(config).catch(e => {
+        logger.error(`Error in userService.getAllUsers! Error message:${e.message}\nstack:${e.stack}`);
         throw new InoperableApiError("Error in userService.getAllUsers");
     });
 };
 const getUserById = async (id, config = {}) => {
     const rows = await UserModel.getOneById(id, config).catch(e => {
+        logger.error(`Error in userService.getUserById! Error message:${e.message}\nstack:${e.stack}`);
         throw new InoperableApiError("Error in userService.getUserById!");
     });
     if (rows.rows.length === 0) {
@@ -24,6 +27,7 @@ const loginUser = async (username, password, config = {}) => {
     }
 
     const dbPassword = await UserModel.getPassword(username, config).catch(e => {
+        logger.error("Error in userService.loginUser! Error message:${e.message}\nstack:${e.stack}");
         throw new InoperableApiError("Error in userService.loginUser!");
     });
 

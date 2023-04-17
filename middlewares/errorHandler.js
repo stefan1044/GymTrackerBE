@@ -1,5 +1,6 @@
 const errors = require('../utils/errors');
 const {ApiError} = require("../utils/errors");
+const logger = require('../utils/logger');
 
 
 ENV = process.env.NODE_ENV;
@@ -13,12 +14,12 @@ const errorHandler = async (err, req, res, next) => {
         code: err.statusCode, message: err.message, ...(ENV === "development" && {stack: err.stack})
     };
     if (ENV === "development") {
-        console.log(err);
+        logger.error(`Error code:${err.code} Error message: ${err.message}\nStack trace: ${err.stack}`)
     }
     res.status(err.statusCode).send(response);
 
     if (ENV === "production" && !err.isOperational) {
-        console.log("Hit inoperable error!");
+        logger.error(`Hit inoperable error!\nError message:${err.message}\nStack trace: ${err.stack}`);
         process.kill(process.pid, "SIGTERM");
         // TODO: Restart server when closing;
     }

@@ -49,4 +49,3 @@ class InoperableApiError extends ApiError {
 module.exports = {
     Api400Error, Api404Error, Api500Error, InoperableApiError, ApiError
 };
-

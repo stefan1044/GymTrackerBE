@@ -5,6 +5,7 @@ const {NOT_FOUND} = require("http-status");
 
 
 module.exports = app => {
+    app.disable('x-powered-by');
     app.use("/users", users);
     app.use("/workouts", workouts);
     // send 404 for unknown routes

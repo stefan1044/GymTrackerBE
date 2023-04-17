@@ -1,5 +1,6 @@
 const db = require('../database');
 const {Api500Error} = require('../utils/errors');
+const logger = require("../utils/logger");
 
 
 const WorkoutModel = {
@@ -33,7 +34,7 @@ const WorkoutModel = {
         return db.query(query, values).then(rows => {
             return rows.rows[0]['exists'];
         }).catch(e => {
-            console.log(e.message, e.stack);
+            logger.error(`Error at workoutModel.doesWorkoutIdExist! Error message:${e.message}\nstack:${e.stack}`);
             throw new Api500Error("Error in doesWorkoutIdExist!");
         })
 
@@ -46,7 +47,7 @@ const WorkoutModel = {
         return db.query(query, values).then(rows => {
             return rows.rows[0]['exists'];
         }).catch(e => {
-            console.log(e.message, e.stack);
+            logger.error(`Error at workoutModel.doesUserIdExist! Error message:${e.message}\nstack:${e.stack}`);
             throw new Api500Error("Error in doesUserIdExist!");
         })
     }

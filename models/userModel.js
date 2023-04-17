@@ -1,4 +1,5 @@
 const db = require('../database');
+const logger = require('../utils/logger');
 const {encrypt} = require('../utils/passwordHasher');
 const {Api500Error} = require('../utils/errors');
 
@@ -70,7 +71,7 @@ const UserModel = {
         return db.query(query, values).then(rows => {
             return rows.rows[0]['exists'];
         }).catch(e => {
-            console.log(e.message)
+            logger.error(`Error at userModel.doesUsernameExist! Error message:${e.message}\nstack:${e.stack}`);
             throw new Api500Error("Error in doesUsernameExist!");
         });
     }, doesIdExist: async id => {
@@ -82,7 +83,7 @@ const UserModel = {
         return db.query(query, values).then(rows => {
             return rows.rows[0]['exists'];
         }).catch(e => {
-            console.log(e.message);
+            logger.error(`Error at userModel.doesIdExist! Error message:${e.message}\nstack:${e.stack}`);
             throw new Api500Error("Error in doesIdExist!");
         });
     }
