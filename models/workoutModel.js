@@ -3,6 +3,10 @@ const {Api500Error} = require('../utils/errors');
 const logger = require("../utils/logger");
 
 
+/*
+ Workout Model
+ Handles database requests related to workout data.
+ */
 const WorkoutModel = {
     getAllFromUser: async (userName, config = {}) => {
         let query = {
@@ -37,7 +41,6 @@ const WorkoutModel = {
             logger.error(`Error at workoutModel.doesWorkoutIdExist! Error message:${e.message}\nstack:${e.stack}`);
             throw new Api500Error("Error in doesWorkoutIdExist!");
         })
-
     }, doesUserIdExist: async id => {
         const query = {
             text: "SELECT exists (SELECT 1 FROM  workouts WHERE user_id = $1 LIMIT 1)",

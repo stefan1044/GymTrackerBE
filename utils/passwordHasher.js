@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
-const { Api500Error } = require('./errors');
 const logger = require('../utils/logger');
+
+
 const encrypt = password => {
     const saltRounds = 8;
 

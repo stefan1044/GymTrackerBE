@@ -3,7 +3,7 @@ const logger = require('../utils/logger');
 
 
 const validateWorkout = async (req, res, next) => {
-    // format the dates into integers
+    // Format the dates into integers
     const completedAt = req.body['completed_at'].split("-").map(value => {
         if (value[0] === "0") {
             return parseInt(value[1]);
@@ -33,14 +33,14 @@ const validateWorkout = async (req, res, next) => {
         }
     }
 
-    // verify duration
+    // Verify duration
     const duration = req.body['duration'];
     if (duration < 1 || duration > 1440) {
         res.status(httpStatus.BAD_REQUEST).send("Incorrect duration!");
         return;
     }
 
-    // verify exercises
+    // Verify exercises to be JSON
     const exercises = req.body['exercises'];
     console.log(typeof exercises);
     try {

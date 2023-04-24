@@ -23,6 +23,7 @@ server = app.listen(port, () => {
     });
 });
 
+// TODO: Perform better cleanup
 process.on("SIGTERM", () => {
     logger.log({
         level: "info",

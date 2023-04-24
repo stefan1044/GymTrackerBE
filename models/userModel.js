@@ -3,7 +3,10 @@ const logger = require('../utils/logger');
 const {encrypt} = require('../utils/passwordHasher');
 const {Api500Error} = require('../utils/errors');
 
-
+/*
+    User Model
+    Handles database requests related to user data.
+ */
 const UserModel = {
     getAll: async (config = {}) => {
         const query = {
@@ -26,8 +29,12 @@ const UserModel = {
 
         return db.query(query, values);
     }, create: async (userName, password, email, config = {}) => {
-        // TODO: Error handle password encryption
-        password = await encrypt(password);
+        try {
+            password = await encrypt(password);
+        } catch (e){
+            logger.error(`Error when trying to encrypt password! Error message:${e.message}\nstack:${e.stack}`);
+            throw new Api500Error("Error in userModel.create!");
+        }
         const query = {
             text: "INSERT INTO users(user_name, password, email, created_at) VALUES($1, $2, $3, NOW())", ...config
         };

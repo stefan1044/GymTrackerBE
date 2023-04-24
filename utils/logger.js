@@ -1,11 +1,10 @@
 const {createLogger, format, transports} = require('winston');
 const winston = require("winston");
-const {combine, timestamp} = format;
 
 
 const logger = new createLogger();
 
-// TODO: Add production logger
+// TODO: Improve production logger, fix exception logs being shown on 1 line
 if (process.env.NODE_ENV === "production") {
     logger.configure({
         transports: [new transports.File({

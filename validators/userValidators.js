@@ -1,6 +1,17 @@
 const httpStatus = require('http-status');
 
 
+/*
+    User validator:
+    username: must be present
+             between 6 and 24 characters
+             must not have the characters: ' " \ * =
+    password: must be present
+              between 6 and 32 characters
+              must not have the characters: ' " \ * =
+    email: must be present
+           has to match regex
+ */
 const validateUsername = async (req, res, next) => {
     let userName = req.body['user_name'];
     if (userName === undefined) {
@@ -47,6 +58,9 @@ const validatePassword = async (req, res, next) => {
 
 const validateEmail = async (req, res, next) => {
     const email = req.body['email'];
+    if (email === undefined){
+        res.status(httpStatus.BAD_REQUEST).send("Field email is not present in body of request!")
+    }
     if (!email.toLowerCase().match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
         res.status(httpStatus.BAD_REQUEST).send("Invalid email");
         return;

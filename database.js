@@ -1,6 +1,7 @@
 const {Pool} = require('pg');
 const logger = require('./utils/logger');
 
+
 const config = {
     database: process.env.DB_DATABASE,
     host: process.env.DB_HOST,
@@ -14,11 +15,13 @@ const config = {
     maxUses: 7500
 };
 const pool = new Pool(config);
+// Counters used for debugging. Not currently used anywhere
 let connectionCount = 0;
 let acquireCount = 0;
 
+
 if (process.env.NODE_ENV === "development") {
-    pool.on("end", () =>  logger.info(`Pool closed!`));
+    pool.on("end", () =>  logger.info(`Pool closed! connectionCount:${connectionCount}, acquireCount:${acquireCount}`));
     pool.on("error", (e, client) => {
         logger.error(`Db client encountered errors!\nError message: ${e.message} with stack:\n ${e.stack}`);
         client.release();
@@ -57,7 +60,7 @@ if (process.env.NODE_ENV === "development") {
         end: pool.end,
     };
 } else {
-    pool.on("end", () => logger.info(`Pool closed!`));
+    pool.on("end", () => logger.info(`Pool closed! connectionCount:${connectionCount}, acquireCount:${acquireCount}`));
     pool.on("error", (e, client) => {
         client.release();
     });
@@ -75,6 +78,7 @@ if (process.env.NODE_ENV === "development") {
             client.release();
         });
     }).catch(e => {
+        logger.error("Client closed when trying to open!");
         pool.end();
     });
 
