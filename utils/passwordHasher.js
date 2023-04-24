@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const logger = require('../utils/logger');
 
-
+// TODO: Verify way errors are thrown here
 const encrypt = password => {
     const saltRounds = 8;
 

@@ -1,5 +1,7 @@
 const httpStatus = require('http-status');
 const userService = require('../services/userService');
+const {createToken} = require('../utils/jwtUtils');
+const {Api500Error} = require("../utils/errors");
 
 
 const createUser = async (req, res, next) => {
@@ -88,10 +90,17 @@ const deleteUser = async (req, res, next) => {
     });
 };
 
+// Review token creation process
 const loginUser = async (req, res, next) => {
     await userService.loginUser(req.body['user_name'], req.body['password']).then(ok => {
         if (ok) {
-            res.status(httpStatus.OK).send("Logged in!");
+            let token = undefined;
+            try{
+                token = createToken(req.body['user_name']);
+            }catch(e){
+                throw new Api500Error("Error when creating token!");
+            }
+            res.status(httpStatus.OK).json({message:"Logged in!", token:token});
         } else {
             res.status(httpStatus.NOT_FOUND).send("Invalid username or password!");
         }

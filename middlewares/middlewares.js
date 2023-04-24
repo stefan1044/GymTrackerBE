@@ -18,7 +18,7 @@ module.exports = app => {
     app.use(express.json());
     if (process.env.NODE_ENV === "development") {
         app.use(morgan("dev"));
-        require('express-debug')(app);
+        //require('express-debug')(app);  deprecated?
 
     } else {
         app.use("/users/login", authLimiter);
