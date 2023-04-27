@@ -6,7 +6,6 @@ const router = new Router();
 
 
 
-// TODO: Check if jwt belongs to user
 router.get("/all", userController.readUsers); // not sure if needed
 router.get("/id/:id", userController.readUserById); // not sure if needed
 router.get("/login", userValidator.validateUsername, userValidator.validatePassword, userController.loginUser);
