@@ -38,7 +38,7 @@ const readUserById = async (req, res, next) => {
 };
 
 const updateUsername = async (req, res, next) => {
-    await userService.modifyUsername(req.params.id, req.body['user_name']).then(rows => {
+    await userService.modifyUsername(req.user_id, req.body['user_name']).then(rows => {
         res.status(httpStatus.OK).send();
     }).catch(e => {
         if (e.statusCode === httpStatus.NOT_FOUND) {
@@ -53,7 +53,7 @@ const updateUsername = async (req, res, next) => {
     });
 };
 const updatePassword = async (req, res, next) => {
-    await userService.modifyPassword(req.params.id, req.body['password']).then(rows => {
+    await userService.modifyPassword(req.user_id, req.body['password']).then(rows => {
         res.status(httpStatus.OK).send();
     }).catch(e => {
         if (e.statusCode === httpStatus.NOT_FOUND) {
@@ -65,7 +65,7 @@ const updatePassword = async (req, res, next) => {
     });
 };
 const updateEmail = async (req, res, next) => {
-    await userService.modifyEmail(req.params.id, req.body['email']).then(rows => {
+    await userService.modifyEmail(req.user_id, req.body['email']).then(rows => {
         res.status(httpStatus.OK).send();
     }).catch(e => {
         if (e.statusCode === httpStatus.NOT_FOUND) {
@@ -92,17 +92,19 @@ const deleteUser = async (req, res, next) => {
 
 // Review token creation process
 const loginUser = async (req, res, next) => {
-    await userService.loginUser(req.body['user_name'], req.body['password']).then(ok => {
-        if (ok) {
-            let token = undefined;
-            try{
-                token = createToken(req.body['user_name']);
-            }catch(e){
+    await userService.loginUser(req.body['user_name'], req.body['password']).then(userId => {
+        if (userId === -1) {
+            res.status(httpStatus.NOT_FOUND).send("Invalid username or password!");
+        } else {
+            try {
+                const token = createToken(userId);
+                res.status(httpStatus.OK).json({
+                    message: "Logged in!",
+                    token: token
+                });
+            } catch (e) {
                 throw new Api500Error("Error when creating token!");
             }
-            res.status(httpStatus.OK).json({message:"Logged in!", token:token});
-        } else {
-            res.status(httpStatus.NOT_FOUND).send("Invalid username or password!");
         }
     }).catch(e => {
         next(e);

@@ -7,8 +7,8 @@ const router = new Router();
 
 
 router.get("/:id", verifyToken, workoutController.readWorkoutById);
-router.get("/user/:id", verifyToken, workoutController.readWorkoutsByUserId);
+router.get("/user", verifyToken, workoutController.readWorkoutsByUserId);
 
-router.post("/:user_id", verifyToken, workoutValidator.validateWorkout, workoutController.createWorkout);
+router.post("/", verifyToken, workoutValidator.validateWorkout, workoutController.createWorkout);
 
 module.exports = router;

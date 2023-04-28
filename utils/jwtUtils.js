@@ -6,29 +6,11 @@ const jwtKey = process.env.JWT_SECRET;
 
 // TODO: Verify way errors are thrown here, implementation is not final
 const createToken = payload => {
-    let token = undefined;
-
-    try {
-        token = jwt.sign(payload, jwtKey);
-    } catch (e){
-        logger.error(`Error in jwtUtils.createToken! Error message:${e.message}\nstack:${e.stack}`);
-        throw new Api500Error(`Error in jwtUtils.createToken!`);
-    }
-
-    return token;
+    return jwt.sign(payload, jwtKey);
 };
 
 const decodeToken = token => {
-    let message = undefined;
-
-    try {
-        message = jwt.decode(token, jwtKey);
-    } catch (e){
-        logger.error(`Error in jwtUtils.decodeToken! Error message:${e.message}\nstack:${e.stack}`);
-        throw new Api500Error(`Error in jwtUtils.decodeToken!`);
-    }
-
-    return message;
+    return jwt.decode(token, jwtKey);
 };
 
 

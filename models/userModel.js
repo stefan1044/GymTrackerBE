@@ -21,6 +21,13 @@ const UserModel = {
         const values = [id];
 
         return db.query(query, values);
+    }, getIdByUsername: async (username, config = {}) => {
+        const query = {
+            text: "SELECT user_id FROM users WHERE user_name = $1 LIMIT 1", ...config
+        };
+        const values = [username];
+
+        return db.query(query, values);
     }, getPassword: async (username, config = {}) => {
         const query = {
             text: "SELECT password FROM users WHERE user_name = $1", ...config
@@ -45,7 +52,7 @@ const UserModel = {
         let query = {
             text: "UPDATE users SET user_name = $1 WHERE user_id = $2", ...config
         };
-        const values = [userName, id]
+        const values = [userName, id];
 
         return db.query(query, values);
     }, modifyPassword: async (id, password, config = {}) => {

@@ -6,22 +6,27 @@ const logger = require("../utils/logger");
 
 // Add error handling, implementation not final
 const verifyToken = async (req, res, next) => {
-    let token = req.headers["x-access-token"];
-
+    const token = req.headers["x-access-token"];
     if (!token){
         res.status(httpStatus.FORBIDDEN).send("No token provided!");
         return;
     }
 
-    const message = decodeToken(token);
+    try {
+        const message = decodeToken(token);
+        if (message === null) {
+            res.status(httpStatus.UNAUTHORIZED).send("Unauthorized");
+            return;
+        }
+        req.user_id = message;
 
-    if (message === null){
-        res.status(httpStatus.UNAUTHORIZED).send("Unauthorized");
-        return;
+        next();
+    } catch (e){
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).send("Error decoding token");
+
+        next(e);
     }
-    req.user_name = token.user_name;
 
-    next();
 };
 
 

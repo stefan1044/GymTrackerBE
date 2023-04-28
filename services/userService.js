@@ -1,7 +1,7 @@
 const UserModel = require('../models/userModel');
 const logger = require('../utils/logger');
 const {compare} = require('../utils/passwordHasher');
-const {Api400Error, Api404Error, InoperableApiError} = require('../utils/errors');
+const {Api400Error, Api404Error, InoperableApiError, Api500Error} = require('../utils/errors');
 
 
 const getAllUsers = async (config = {}) => {
@@ -23,15 +23,23 @@ const getUserById = async (id, config = {}) => {
 };
 const loginUser = async (username, password, config = {}) => {
     if (await UserModel.doesUsernameExist(username) === false) {
-        return false;
+        return -1;
     }
 
     const dbPassword = await UserModel.getPassword(username, config).catch(e => {
         logger.error("Error in userService.loginUser! Error message:${e.message}\nstack:${e.stack}");
         throw new InoperableApiError("Error in userService.loginUser!");
     });
+    if(compare(password, dbPassword.rows[0]['password'])){
+         const userId = await UserModel.getIdByUsername(username).catch(e => {
+            logger.error(`Error in userService.loginUser! Error message:${e.message}\nstack:${e.stack}`);
+            throw new Api500Error("Error in userService.loginUser!");
+        });
 
-    return compare(password, dbPassword.rows[0]['password']);
+        return userId.rows[0]["user_id"];
+    } else{
+        return -1;
+    }
 };
 
 const createUser = async (username, password, email, config = {}) => {

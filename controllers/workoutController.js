@@ -3,7 +3,7 @@ const workoutService = require('../services/workoutService');
 
 
 const createWorkout = async (req, res, next) => {
-    await workoutService.createWorkout(req.params.user_id, req.body['completed_at'], req.body['duration'], req.body['exercises']).then(rows => {
+    await workoutService.createWorkout(req.user_id, req.body['completed_at'], req.body['duration'], req.body['exercises']).then(rows => {
         res.status(httpStatus.CREATED).send();
     }).catch(e => {
         if (e.statusCode === httpStatus.NOT_FOUND) {
@@ -28,7 +28,7 @@ const readWorkoutById = async (req, res, next) => {
     });
 };
 const readWorkoutsByUserId = async (req, res, next) => {
-    await workoutService.getAllWorkoutsByUser(req.params.id).then(rows => {
+    await workoutService.getAllWorkoutsByUser(req.user_id).then(rows => {
         res.status(httpStatus.OK).json(rows);
     }).catch(e => {
         if (e.statusCode === httpStatus.NOT_FOUND) {
