@@ -1,7 +1,7 @@
 const UserModel = require('../models/userModel');
 const logger = require('../utils/logger');
 const {compare, encrypt} = require('../utils/passwordHasher');
-const {Api400Error, Api404Error, InoperableApiError, Api500Error} = require('../utils/errors');
+const {Api400Error, Api404Error, Api500Error} = require('../utils/errors');
 
 
 const getAllUsers = async () => {
@@ -30,8 +30,8 @@ const loginUser = async (username, password) => {
         logger.error(`Error in userService.loginUser! Error message:${e.message}\nstack:${e.stack}`);
         throw new Api500Error("Error in userService.loginUser!");
     });
-    if(await compare(password, dbPassword)){
-        console.log("HERE");
+    const doesPasswordMatch = await compare(password, dbPassword);
+    if(doesPasswordMatch){
         return await UserModel.getIdByUsername(username).catch(e => {
             logger.error(`Error in userService.loginUser! Error message:${e.message}\nstack:${e.stack}`);
             throw new Api500Error("Error in userService.loginUser!");
