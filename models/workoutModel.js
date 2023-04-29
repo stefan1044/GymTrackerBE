@@ -8,27 +8,27 @@ const logger = require("../utils/logger");
  Handles database requests related to workout data.
  */
 const WorkoutModel = {
-    getAllFromUser: async (userName, config = {}) => {
-        let query = {
-            text: "SELECT * FROM workouts WHERE user_id = $1", ...config
+    getWorkoutsByUserId: async (userId) => {
+        const query = {
+            text: "SELECT * FROM workouts WHERE user_id = $1"
         };
-        const values = [userName];
+        const values = [userId];
 
-        return db.query(query, values);
-    }, getOneById: async (id, config = {}) => {
-        let query = {
-            text: "SELECT * FROM workouts WHERE workout_id = $1 LIMIT 1", ...config
+        return db.query(query, values).then(queryResult => queryResult.rows);
+    }, getWorkoutByWorkoutId: async (id) => {
+        const query = {
+            text: "SELECT * FROM workouts WHERE workout_id = $1 LIMIT 1"
         };
         const values = [id];
 
-        return db.query(query, values);
-    }, create: async (userId, completedAt, duration, exercises, config = {}) => {
-        let query = {
-            text: "INSERT INTO workouts(user_id, completed_at, duration, exercises) VALUES($1, $2, $3, $4)", ...config
+        return db.query(query, values).then(queryResult => queryResult.rows);
+    }, createWorkoutInDatabase: async (userId, completedAt, duration, exercises) => {
+        const query = {
+            text: "INSERT INTO workouts(user_id, completed_at, duration, exercises) VALUES($1, $2, $3, $4)"
         };
         const values = [userId, completedAt, duration, exercises];
 
-        return db.query(query, values);
+        await db.query(query, values);
     }, doesWorkoutIdExist: async id => {
         const query = {
             text: "SELECT exists (SELECT 1 FROM  workouts WHERE workout_id = $1 LIMIT 1)",

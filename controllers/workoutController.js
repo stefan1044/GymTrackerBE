@@ -3,7 +3,7 @@ const workoutService = require('../services/workoutService');
 
 
 const createWorkout = async (req, res, next) => {
-    await workoutService.createWorkout(req.user_id, req.body['completed_at'], req.body['duration'], req.body['exercises']).then(rows => {
+    await workoutService.createWorkout(req.user_id, req.body['completed_at'], req.body['duration'], req.body['exercises']).then(() => {
         res.status(httpStatus.CREATED).send();
     }).catch(e => {
         if (e.statusCode === httpStatus.NOT_FOUND) {
@@ -16,8 +16,8 @@ const createWorkout = async (req, res, next) => {
 };
 
 const readWorkoutById = async (req, res, next) => {
-    await workoutService.getWorkoutById(req.params.id).then(rows => {
-        res.status(httpStatus.OK).json(rows.rows);
+    await workoutService.getWorkoutById(req.params.id).then(workout => {
+        res.status(httpStatus.OK).json(workout);
     }).catch(e => {
         if (e.statusCode === httpStatus.NOT_FOUND) {
             e.message = "User with provided user_id does not exist!";
@@ -28,8 +28,9 @@ const readWorkoutById = async (req, res, next) => {
     });
 };
 const readWorkoutsByUserId = async (req, res, next) => {
-    await workoutService.getAllWorkoutsByUser(req.user_id).then(rows => {
-        res.status(httpStatus.OK).json(rows);
+    console.log("HERE");
+    await workoutService.getAllWorkoutsByUser(req.user_id).then(workouts => {
+        res.status(httpStatus.OK).json(workouts);
     }).catch(e => {
         if (e.statusCode === httpStatus.NOT_FOUND) {
             e.message = "User with provided user_id does not exist!";

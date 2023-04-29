@@ -1,40 +1,39 @@
 const WorkoutModel = require('../models/workoutModel');
 const UserModel = require('../models/userModel');
 const logger = require('../utils/logger');
-const {Api404Error, InoperableApiError} = require('../utils/errors');
+const {Api404Error, InoperableApiError, Api500Error} = require('../utils/errors');
 
 
-const getAllWorkoutsByUser = async (userId, config = {}) => {
+const getAllWorkoutsByUser = async (userId) => {
     if (await WorkoutModel.doesUserIdExist(userId) === false) {
         throw new Api404Error("No workouts for given userId");
     }
-    const rows = WorkoutModel.getAllFromUser(userId).catch(e => {
+
+    return WorkoutModel.getWorkoutsByUserId(userId).catch(e => {
         logger.error(`Error in workoutService.getAllWorkoutsByUser! Error message:${e.message}\nstack:${e.stack}`);
-        throw new InoperableApiError("Error in workoutService.getAllWorkoutsByUser");
+        throw new Api500Error("Error in workoutService.getAllWorkoutsByUser");
     });
-
-    return rows.rows;
 };
-const getWorkoutById = async (id, config = {}) => {
-    const rows = await WorkoutModel.getOneById(id, config).catch(e => {
+const getWorkoutById = async (id) => {
+    const workout = await WorkoutModel.getWorkoutByWorkoutId(id).catch(e => {
         logger.error(`Error in workoutService.getWorkoutById! Error message:${e.message}\nstack:${e.stack}`);
-        throw new InoperableApiError("Error in workoutService.getWorkoutById");
+        throw new Api500Error("Error in workoutService.getWorkoutByWorkoutId");
     });
-
-    if (rows.rows.length === 0) {
+    if (workout.length === 0) {
         throw new Api404Error("Workout with provided workout_id does not exist!");
     }
-    return rows.rows;
+
+    return workout;
 };
 
-const createWorkout = async (userId, completedAt, duration, exercises, config = {}) => {
+const createWorkout = async (userId, completedAt, duration, exercises) => {
     if (await UserModel.doesIdExist(userId) === false) {
-        throw new Api404Error("Cannot create workout for nonexistent user!");
+        throw new Api404Error("Cannot createWorkoutInDatabase workout for nonexistent user!");
     }
 
-    return WorkoutModel.create(userId, completedAt, duration, exercises, config).catch(e => {
+    await WorkoutModel.createWorkoutInDatabase(userId, completedAt, duration, exercises).catch(e => {
         logger.error(`Error in workoutService.createWorkout! Error message:${e.message}\nstack:${e.stack}`);
-        throw new InoperableApiError("Error in workoutService.createWorkout");
+        throw new Api500Error("Error in workoutService.createWorkout");
     });
 };
 

@@ -5,8 +5,7 @@ const Router = require('express-promise-router');
 const router = new Router();
 
 
-
-router.get("/:id", verifyToken, workoutController.readWorkoutById);
+router.get("/byId/:id", verifyToken, workoutController.readWorkoutById);
 router.get("/user", verifyToken, workoutController.readWorkoutsByUserId);
 
 router.post("/", verifyToken, workoutValidator.validateWorkout, workoutController.createWorkout);

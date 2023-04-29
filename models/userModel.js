@@ -56,7 +56,7 @@ const UserModel = {
         };
         const values = [password, id];
 
-        return db.query(query, values);
+        await db.query(query, values);
     }, modifyEmailById: async (id, email) => {
         const query = {
             text: "UPDATE users SET email = $1 WHERE user_id = $2"
