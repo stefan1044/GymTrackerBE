@@ -1,77 +1,72 @@
 const db = require('../database');
 const logger = require('../utils/logger');
-const {encrypt} = require('../utils/passwordHasher');
 const {Api500Error} = require('../utils/errors');
+
 
 /*
     User Model
     Handles database requests related to user data.
+    // TODO: Make query text be constants
  */
 const UserModel = {
-    getAll: async (config = {}) => {
+    getAll: async () => {
         const query = {
-            text: "SELECT * FROM users", ...config
+            text: "SELECT * FROM users"
         };
 
-        return db.query(query);
-    }, getOneById: async (id, config = {}) => {
+        return db.query(query).then(queryResult => queryResult.rows);
+    }, getOneById: async (id) => {
         const query = {
-            text: "SELECT * FROM users WHERE user_id = $1 LIMIT 1", ...config
+            text: "SELECT * FROM users WHERE user_id = $1 LIMIT 1"
         };
         const values = [id];
 
-        return db.query(query, values);
-    }, getIdByUsername: async (username, config = {}) => {
+        return db.query(query, values).then( queryResult => queryResult.rows);
+    }, getIdByUsername: async (username) => {
         const query = {
-            text: "SELECT user_id FROM users WHERE user_name = $1 LIMIT 1", ...config
+            text: "SELECT user_id FROM users WHERE user_name = $1 LIMIT 1"
         };
         const values = [username];
 
-        return db.query(query, values);
-    }, getPassword: async (username, config = {}) => {
+        return db.query(query, values).then( queryResult => queryResult.rows[0]["user_id"]);
+    }, getPassword: async (username) => {
         const query = {
-            text: "SELECT password FROM users WHERE user_name = $1", ...config
+            text: "SELECT password FROM users WHERE user_name = $1"
         };
         const values = [username];
 
-        return db.query(query, values);
-    }, create: async (userName, password, email, config = {}) => {
-        try {
-            password = await encrypt(password);
-        } catch (e){
-            logger.error(`Error when trying to encrypt password! Error message:${e.message}\nstack:${e.stack}`);
-            throw new Api500Error("Error in userModel.create!");
-        }
+        return db.query(query, values).then( queryResult => queryResult.rows[0]['password']);
+    }, create: async (userName, password, email) => {
         const query = {
-            text: "INSERT INTO users(user_name, password, email, created_at) VALUES($1, $2, $3, NOW())", ...config
+            text: "INSERT INTO users(user_name, password, email, created_at) VALUES($1, $2, $3, NOW())"
         };
         const values = [userName, password, email];
 
         return db.query(query, values);
-    }, modifyUsername: async (id, userName, config = {}) => {
+    }, modifyUsername: async (id, userName) => {
         let query = {
-            text: "UPDATE users SET user_name = $1 WHERE user_id = $2", ...config
+            text: "UPDATE users SET user_name = $1 WHERE user_id = $2"
         };
         const values = [userName, id];
 
         return db.query(query, values);
-    }, modifyPassword: async (id, password, config = {}) => {
+    }, modifyPassword: async (id, password) => {
         let query = {
-            text: "UPDATE users SET password = $1 WHERE user_id = $2", ...config
+            text: "UPDATE users SET password = $1 WHERE user_id = $2"
         };
         const values = [password, id];
 
         return db.query(query, values);
-    }, modifyEmail: async (id, email, config = {}) => {
+    }, modifyEmail: async (id, email) => {
         let query = {
-            text: "UPDATE users SET email = $1 WHERE user_id = $2", ...config
+            text: "UPDATE users SET email = $1 WHERE user_id = $2"
         };
         const values = [email, id];
 
         return db.query(query, values);
-    }, remove: async (id, config = {}) => {
+    }, remove: async (id) => {
         let query = {
-            text: "DELETE FROM users WHERE user_id = $1", ...config
+            text: "DELETE FROM users WHERE user_id = $1"
         };
         const values = [id];
 

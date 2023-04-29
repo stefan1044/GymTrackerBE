@@ -18,8 +18,8 @@ const createUser = async (req, res, next) => {
 };
 
 const readUsers = async (req, res, next) => {
-    await userService.getAllUsers().then(rows => {
-        res.status(httpStatus.OK).json(rows.rows);
+    await userService.getAllUsers().then(users => {
+        res.status(httpStatus.OK).json(users);
     }).catch(e => {
         next(e);
     });

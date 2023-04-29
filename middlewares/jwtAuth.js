@@ -1,10 +1,7 @@
-const {createToken, decodeToken} = require('../utils/jwtUtils');
-const {Api500Error} =  require('../utils/errors');
+const {decodeToken} = require('../utils/jwtUtils');
 const httpStatus = require('http-status')
-const logger = require("../utils/logger");
 
 
-// Add error handling, implementation not final
 const verifyToken = async (req, res, next) => {
     const token = req.headers["x-access-token"];
     if (!token){
@@ -26,7 +23,6 @@ const verifyToken = async (req, res, next) => {
 
         next(e);
     }
-
 };
 
 

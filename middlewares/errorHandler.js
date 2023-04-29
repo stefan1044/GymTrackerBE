@@ -6,6 +6,7 @@ const logger = require('../utils/logger');
 /*
     Middleware that handles all errors that bubble up
  */
+// TODO: find out why error code is undefined
 const errorHandler = async (err, req, res, next) => {
 
     if (!(err instanceof errors.ApiError)) {
@@ -23,7 +24,6 @@ const errorHandler = async (err, req, res, next) => {
     if (process.env.NODE_ENV === "production" && !err.isOperational) {
         logger.error(`Hit inoperable error!\nError message:${err.message}\nStack trace: ${err.stack}`);
         process.kill(process.pid, "SIGTERM");
-        // TODO: Restart server after closing;
     }
 };
 

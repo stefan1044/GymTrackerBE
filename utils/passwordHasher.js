@@ -13,7 +13,9 @@ const encrypt = password => {
 
 };
 const compare = (password, hash) => {
+
     return bcrypt.compare(password, hash).then(result => {
+        console.log(`${password}, ${hash}, ${result}`);
         return result;
     }).catch(e => {
         logger.error(`Encountered error at passwordHasher.compare. Error message:${e.message}\nstack:${e.stack}`);
