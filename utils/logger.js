@@ -25,7 +25,7 @@ if (process.env.NODE_ENV === "production") {
             )
         })]
     });
-} else {
+} else if (process.env.NODE_ENV === "development"){
     logger.configure({
         transports: [new transports.File({
             filename: "development.log",
@@ -42,6 +42,26 @@ if (process.env.NODE_ENV === "production") {
                 format.colorize({all: true}),
                 format.json(),
                 format.printf(info => `${info.timestamp} [${info.level}]: ${info.message}`),
+            )
+        })], exceptionHandlers: [new transports.File({
+            filename: 'developmentExceptions.log',
+            format: format.combine(
+                format.timestamp({format: "YYYY-MM-DD HH:mm:ss"}),
+                format.json(),
+                //format.printf(info => `${info.timestamp} [${info.level}]: ${JSON.stringify(info.message)}\n`),
+                format.printf(info => JSON.stringify(info, null, 2))
+            )
+        })]
+    });
+} else {
+    logger.configure({
+        transports: [new transports.File({
+            filename: "development.log",
+            level: "debug",
+            format: format.combine(
+                format.json(),
+                format.timestamp({format: "YYYY-MM-DD HH:mm:ss"}),
+                format.printf(info => `${info.timestamp} [${info.level}]: ${info.message}`)
             )
         })], exceptionHandlers: [new transports.File({
             filename: 'developmentExceptions.log',

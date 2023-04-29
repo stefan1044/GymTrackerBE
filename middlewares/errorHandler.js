@@ -4,7 +4,7 @@ const logger = require('../utils/logger');
 
 
 /*
-    Middleware that handles all errors that bubble up
+ Middleware that handles all errors that bubble up
  */
 // TODO: find out why error code is undefined
 const errorHandler = async (err, req, res, next) => {
@@ -14,15 +14,16 @@ const errorHandler = async (err, req, res, next) => {
     }
 
     const response = {
-        code: err.statusCode, message: err.message, ...(process.env.NODE_ENV === "development" && {stack: err.stack})
+        code: err.statusCode, message: err.message, ...((process.env.NODE_ENV === "development" ||
+            process.env.NODE_ENV === "test") && {stack: err.stack})
     };
-    if (process.env.NODE_ENV === "development") {
-        logger.error(`Error code:${err.code} Error message: ${err.message}\nStack trace: ${err.stack}`)
+    if (process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test") {
+        logger.info(`Error code:${err.code} Error message: ${err.message}\nStack trace: ${err.stack}`)
     }
     res.status(err.statusCode).send(response);
 
     if (process.env.NODE_ENV === "production" && !err.isOperational) {
-        logger.error(`Hit inoperable error!\nError message:${err.message}\nStack trace: ${err.stack}`);
+        logger.info(`Hit inoperable error!\nError message:${err.message}\nStack trace: ${err.stack}`);
         process.kill(process.pid, "SIGTERM");
     }
 };

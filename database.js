@@ -11,7 +11,7 @@ const config = {
     tsl: true,
     max: 50,
     idleTimeoutMillis: 3000,
-    connectionTimeoutMillis: 1000,
+    connectionTimeoutMillis: 3000,
     maxUses: 7500
 };
 const pool = new Pool(config);
@@ -20,7 +20,7 @@ let connectionCount = 0;
 let acquireCount = 0;
 
 
-if (process.env.NODE_ENV === "development") {
+if (process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test") {
     pool.on("end", () =>  logger.info(`Pool closed! connectionCount:${connectionCount}, acquireCount:${acquireCount}`));
     pool.on("error", (e, client) => {
         logger.error(`Db client encountered errors!\nError message: ${e.message} with stack:\n ${e.stack}`);

@@ -16,7 +16,7 @@ module.exports = app => {
     app.use(compression());
     app.use(cors());
     app.use(express.json());
-    if (process.env.NODE_ENV === "development") {
+    if (process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test") {
         app.use(morgan("dev"));
         //require('express-debug')(app);  deprecated?
 

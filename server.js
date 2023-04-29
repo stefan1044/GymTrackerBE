@@ -18,10 +18,10 @@ const runServer = ()=> {
         level: "info",
         message: `Node environment: ${process.env.NODE_ENV}`
     });
-    const server = app.listen(port, () => {
+    const server = app.listen(port ||0, () => {
         logger.log({
             level: "info",
-            message: `App listening at port http://localhost:${port}`
+            message: `App listening at port http://localhost:${server.address().port}`
         });
     });
 
@@ -40,6 +40,8 @@ const runServer = ()=> {
             pool.end();
         }
     });
+
+    return server.address().port;
 };
 
 const closeServer = ()=>{
