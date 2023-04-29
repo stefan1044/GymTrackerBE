@@ -28,7 +28,6 @@ const readWorkoutById = async (req, res, next) => {
     });
 };
 const readWorkoutsByUserId = async (req, res, next) => {
-    console.log("HERE");
     await workoutService.getAllWorkoutsByUser(req.user_id).then(workouts => {
         res.status(httpStatus.OK).json(workouts);
     }).catch(e => {
