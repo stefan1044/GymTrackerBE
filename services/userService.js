@@ -5,13 +5,13 @@ const {Api400Error, Api404Error, InoperableApiError, Api500Error} = require('../
 
 
 const getAllUsers = async () => {
-    return UserModel.getAll().catch(e => {
+    return UserModel.getAllUsersFromDatabase().catch(e => {
         logger.error(`Error in userService.getAllUsers! Error message:${e.message}\nstack:${e.stack}`);
         throw new Api500Error("Error in userService.getAllUsers");
     });
 };
 const getUserById = async (id) => {
-    const user = await UserModel.getOneById(id).catch(e => {
+    const user = await UserModel.getUserById(id).catch(e => {
         logger.error(`Error in userService.getUserById! Error message:${e.message}\nstack:${e.stack}`);
         throw new Api500Error("Error in userService.getUserById!");
     });
@@ -21,17 +21,16 @@ const getUserById = async (id) => {
 
     return user;
 };
-// TODO: FIX, currently not working
 const loginUser = async (username, password) => {
     if (await UserModel.doesUsernameExist(username) === false) {
         return -1;
     }
 
-    const dbPassword = await UserModel.getPassword(username).catch(e => {
+    const dbPassword = await UserModel.getPasswordByUsername(username).catch(e => {
         logger.error(`Error in userService.loginUser! Error message:${e.message}\nstack:${e.stack}`);
         throw new Api500Error("Error in userService.loginUser!");
     });
-    if(compare(password, dbPassword)){
+    if(await compare(password, dbPassword)){
         console.log("HERE");
         return await UserModel.getIdByUsername(username).catch(e => {
             logger.error(`Error in userService.loginUser! Error message:${e.message}\nstack:${e.stack}`);
@@ -54,7 +53,7 @@ const createUser = async (username, password, email) => {
         throw new Api500Error("Error in userService.createUser!");
     }
 
-    return UserModel.create(username, password, email)
+    await UserModel.createUserInDatabase(username, password, email);
 };
 
 const modifyUsername = async (id, username) => {
@@ -65,7 +64,7 @@ const modifyUsername = async (id, username) => {
         throw new Api400Error("Username taken!");
     }
 
-    return UserModel.modifyUsername(id, username);
+    await UserModel.modifyUsernameById(id, username);
 };
 const modifyPassword = async (id, password) => {
     if (await UserModel.doesIdExist(id) === false) {
@@ -78,14 +77,14 @@ const modifyPassword = async (id, password) => {
         throw new Api500Error("Error in userService.createUser!");
     }
 
-    return UserModel.modifyPassword(id, password);
+    await UserModel.modifyPasswordById(id, password);
 };
 const modifyEmail = async (id, email) => {
     if (await UserModel.doesIdExist(id) === false) {
         throw new Api404Error("User with id does not exist!");
     }
 
-    return UserModel.modifyEmail(id, email);
+    await UserModel.modifyEmailById(id, email);
 };
 
 const removeUser = async (id) => {
@@ -93,7 +92,7 @@ const removeUser = async (id) => {
         throw new Api404Error("User with id does not exist!");
     }
 
-    return UserModel.remove(id);
+    await UserModel.removeUserById(id);
 };
 
 module.exports = {

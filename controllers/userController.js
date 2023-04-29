@@ -5,7 +5,7 @@ const {Api500Error} = require("../utils/errors");
 
 
 const createUser = async (req, res, next) => {
-    await userService.createUser(req.body['user_name'], req.body['password'], req.body['email']).then(rows => {
+    await userService.createUser(req.body['user_name'], req.body['password'], req.body['email']).then(() => {
         res.status(httpStatus.CREATED).send();
     }).catch(e => {
         if (e.statusCode === httpStatus.BAD_REQUEST) {
@@ -38,7 +38,7 @@ const readUserById = async (req, res, next) => {
 };
 
 const updateUsername = async (req, res, next) => {
-    await userService.modifyUsername(req.user_id, req.body['user_name']).then(rows => {
+    await userService.modifyUsername(req.user_id, req.body['user_name']).then(() => {
         res.status(httpStatus.OK).send();
     }).catch(e => {
         if (e.statusCode === httpStatus.NOT_FOUND) {
@@ -53,7 +53,7 @@ const updateUsername = async (req, res, next) => {
     });
 };
 const updatePassword = async (req, res, next) => {
-    await userService.modifyPassword(req.user_id, req.body['password']).then(rows => {
+    await userService.modifyPassword(req.user_id, req.body['password']).then(() => {
         res.status(httpStatus.OK).send();
     }).catch(e => {
         if (e.statusCode === httpStatus.NOT_FOUND) {
@@ -65,7 +65,7 @@ const updatePassword = async (req, res, next) => {
     });
 };
 const updateEmail = async (req, res, next) => {
-    await userService.modifyEmail(req.user_id, req.body['email']).then(rows => {
+    await userService.modifyEmail(req.user_id, req.body['email']).then(() => {
         res.status(httpStatus.OK).send();
     }).catch(e => {
         if (e.statusCode === httpStatus.NOT_FOUND) {
@@ -78,7 +78,7 @@ const updateEmail = async (req, res, next) => {
 };
 
 const deleteUser = async (req, res, next) => {
-    await userService.removeUser(req.params.id).then(rows => {
+    await userService.removeUser(req.params.id).then(() => {
         res.status(httpStatus.OK).send();
     }).catch(e => {
         if (e.statusCode === httpStatus.NOT_FOUND) {
@@ -99,8 +99,7 @@ const loginUser = async (req, res, next) => {
             try {
                 const token = createToken(userId);
                 res.status(httpStatus.OK).json({
-                    message: "Logged in!",
-                    token: token
+                    message: "Logged in!", token: token
                 });
             } catch (e) {
                 throw new Api500Error("Error when creating token!");
