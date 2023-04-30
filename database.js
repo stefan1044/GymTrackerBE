@@ -12,7 +12,7 @@ const config = {
     max: 50,
     idleTimeoutMillis: 3000,
     connectionTimeoutMillis: 3000,
-    maxUses: 7500
+    maxUses: 7500,
 };
 const pool = new Pool(config);
 // Counters used for debugging. Not currently used anywhere
@@ -21,12 +21,10 @@ let acquireCount = 0;
 
 
 if (process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test") {
-    pool.on("end", () =>  logger.info(`Pool closed! connectionCount:${connectionCount}, acquireCount:${acquireCount}`));
     pool.on("error", (e, client) => {
         logger.error(`Db client encountered errors!\nError message: ${e.message} with stack:\n ${e.stack}`);
         client.release();
     });
-    pool.on("notice", msg => console.warn("Pool notice", msg));
     pool.on("connect", client => {
         connectionCount++;
         logger.info(`Client connected!`);
@@ -34,6 +32,12 @@ if (process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test") {
     pool.on("acquire", client => {
         acquireCount++;
         logger.info("Client acquired!");
+    });
+    pool.on("release", (e, client) => {
+        logger.info(`Released client ${client}`);
+    });
+    pool.on("remove", client => {
+        logger.info(`Removed client ${client}`);
     });
 
     pool.connect().then(client => {
@@ -57,7 +61,10 @@ if (process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test") {
             logger.info(`executed query ${text.text} Duration:${duration} Returned rows:${res.rowCount}` );
             return res;
         },
-        end: pool.end,
+        end: () => {
+            logger.info(`Pool closed! connectionCount:${connectionCount}, acquireCount:${acquireCount}`)
+            pool.end;
+        },
     };
 } else {
     pool.on("end", () => logger.info(`Pool closed! connectionCount:${connectionCount}, acquireCount:${acquireCount}`));

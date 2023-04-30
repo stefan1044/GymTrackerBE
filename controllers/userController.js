@@ -90,7 +90,6 @@ const deleteUser = async (req, res, next) => {
     });
 };
 
-// Review token creation process
 const loginUser = async (req, res, next) => {
     await userService.loginUser(req.body['user_name'], req.body['password']).then(userId => {
         if (userId === -1) {

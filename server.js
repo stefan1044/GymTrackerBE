@@ -40,15 +40,20 @@ const runServer = ()=> {
             pool.end();
         }
     });
+    process.on("warning", e => {
+        logger.warn(`Process warning! ${e.message}\n${e.stack}`)
+    });
 
-    return server.address().port;
-};
+    const closeServer = () => {
+        server.close();
+        pool.end();
+        logger.info(`Server closed with closeServer!`);
+    };
 
-const closeServer = ()=>{
-    process.kill(process.pid, "SIGTERM");
+    return {port:server.address().port, closeServer};
 };
 
 
 module.exports = {
-    runServer, closeServer
+    runServer
 };
